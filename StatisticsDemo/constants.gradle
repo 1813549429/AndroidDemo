@@ -1,0 +1,47 @@
+project.ext {
+    versionCode = 1
+    versionName = "1.0.0"
+
+    deBugVersionName = "_debug"
+    compileSdkVersion = 28
+    buildToolsVersion = '28.0.3'
+    minSdkVersion = 19
+    targetSdkVersion = 28
+    supportLibraryVersion = '28.0.0'
+
+    //公共库
+
+    protocalVersion = '29.0.0'
+    appusageVersion = '29.0.0'
+    deviceVersion = '29.0.0'
+    toolsVersion = '29.0.0'
+
+    statisticalVersion = '29.0.0'
+    statisticalImplVersion = '29.0.0'
+    statisticalUmengVersion = '29.0.0'
+    statisticalFirebaseVersion = '29.0.0'
+    statisticalFacebookVersion = '29.0.0'
+    statisticalEcsVersion = '28.1.3-beta.1'
+
+
+    netVersion = '29.0.0'
+    netimplVersion = '29.0.0'
+    securityVersion = '29.0.0'
+
+    adsVersion = '29.0.5-beta.1'
+    adsImpleVersion = '29.0.5-beta.1'
+    smaatoAdsVersion = '29.0.1-beta.4'
+    pubnativeAdsVersion = '29.0.1-beta.1'
+    appmonetAdsVersion = '29.0.1-beta.1'
+
+
+    billingVersion = '28.0.0'
+    billingImplVersion = '28.0.0'
+    billingStatisticalVersion = '28.0.0'
+
+    updateVersion = '29.0.0'
+    updateImplVersion = '29.0.0'
+    updateChannelVersion = '28.0.0'
+
+    appliveVersion = '29.0.0'
+}

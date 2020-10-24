@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">Remind</string>
+    <string name="today">Today</string>
+    <string name="next_seven_days">Next 7 days</string>
+    <string name="inbox">Inbox</string>
+    <string name="add_list">Add List</string>
+    <string name="settings">Settings</string>
+</resources>

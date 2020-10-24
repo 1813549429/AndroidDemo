@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ImageView
+        android:id="@+id/iv_nav_bg"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:minHeight="250dp"
+        android:background="@color/activity_bg"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"/>
+
+    <ImageButton
+        android:id="@+id/ib_nav_search"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        android:padding="20dp"
+        android:background="@mipmap/ic_launcher_round"/>
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintTop_toBottomOf="@id/iv_nav_bg"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        android:background="@color/write">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:id="@+id/tv_nav_today"
+                app:layout_constraintTop_toTopOf="parent"
+                android:text="@string/today"
+                app:drawableLeftCompat="@mipmap/ic_launcher"
+                style="@style/NavTextView"
+                tools:ignore="MissingConstraints"/>
+
+            <TextView
+                android:id="@+id/tv_nav_next_seven_days"
+                app:layout_constraintTop_toBottomOf="@id/tv_nav_today"
+                android:text="@string/next_seven_days"
+                app:drawableLeftCompat="@mipmap/ic_launcher"
+                style="@style/NavTextView"
+                tools:ignore="MissingConstraints"/>
+
+            <TextView
+                android:id="@+id/tv_nav_inbox"
+                app:layout_constraintTop_toBottomOf="@id/tv_nav_next_seven_days"
+                android:text="@string/inbox"
+                app:drawableLeftCompat="@mipmap/ic_launcher"
+                style="@style/NavTextView"
+                tools:ignore="MissingConstraints"/>
+
+            <View
+                android:id="@+id/dividing_line"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dividing_line_small"
+                app:layout_constraintTop_toBottomOf="@id/tv_nav_inbox"
+                app:layout_constraintLeft_toLeftOf="parent"
+                android:background="@color/activity_bg"/>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rv_nav_checklist"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toBottomOf="@id/dividing_line"
+                app:layout_constraintLeft_toLeftOf="parent"/>
+
+            <View
+                android:id="@+id/dividing_line2"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dividing_line_small"
+                app:layout_constraintTop_toBottomOf="@id/rv_nav_checklist"
+                app:layout_constraintLeft_toLeftOf="parent"
+                android:background="@color/activity_bg"/>
+
+            <TextView
+                android:id="@+id/tv_nav_add_list"
+                app:layout_constraintTop_toBottomOf="@id/dividing_line2"
+                android:text="@string/add_list"
+                app:drawableLeftCompat="@mipmap/ic_launcher"
+                style="@style/NavTextView"
+                tools:ignore="MissingConstraints" />
+
+            <TextView
+                android:id="@+id/tv_nav_setting"
+                app:layout_constraintTop_toBottomOf="@id/tv_nav_add_list"
+                android:text="@string/settings"
+                app:drawableLeftCompat="@mipmap/ic_launcher"
+                style="@style/NavTextView"
+                tools:ignore="MissingConstraints"/>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+    </androidx.core.widget.NestedScrollView>
+
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

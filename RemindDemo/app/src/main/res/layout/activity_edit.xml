@@ -1,0 +1,205 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="holder"
+            type="com.example.reminddemo.ui.EditActivity" />
+
+        <variable
+            name="vm"
+            type="com.example.reminddemo.ui.vm.EditViewModel" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".ui.MainActivity">
+
+        <ImageButton
+            android:id="@+id/ib_cancel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="@{()->holder.onClick(holder.CLICK_CANCEL)}"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            android:background="@drawable/ic_close"
+            android:layout_margin="20dp"/>
+
+        <ImageButton
+            android:id="@+id/ib_checked"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="@{()->holder.onClick(holder.CLICK_SAVE)}"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            android:background="@drawable/ic_check"
+            android:layout_margin="20dp"/>
+
+
+        <TextView
+            android:id="@+id/text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="40sp"
+            android:layout_margin="20dp"
+            android:textColor="@color/blue"
+            app:layout_constraintTop_toBottomOf="@id/ib_cancel"
+            app:layout_constraintLeft_toLeftOf="parent"
+            android:text="@string/create_schedule"/>
+
+        <EditText
+            android:id="@+id/et_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/input_event_title"
+            android:textSize="20sp"
+            app:layout_constraintTop_toBottomOf="@id/text"
+            app:layout_constraintLeft_toLeftOf="parent"
+            android:layout_margin="20dp"/>
+
+        <RelativeLayout
+            android:id="@+id/rl_start_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="@{()->holder.onClick(holder.CLICK_START)}"
+            app:layout_constraintTop_toBottomOf="@id/et_title"
+            app:layout_constraintLeft_toLeftOf="parent"
+            android:padding="20dp">
+
+            <TextView
+                android:id="@+id/tv_start_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:text="@string/start_time"
+                android:textColor="@color/black"
+                android:layout_centerVertical="true"
+                android:textSize="20sp"
+                android:textStyle="bold"/>
+
+            <TextView
+                android:id="@+id/tv_start_remark"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:layout_toLeftOf="@id/iv_start_icon"
+                android:layout_centerVertical="true"
+                android:text="@{vm.startTimeRemark}"
+                android:textColor="@color/gray"
+                android:textSize="13sp" />
+
+            <ImageView
+                android:id="@+id/iv_start_icon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:background="@drawable/ic_action_name"/>
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/rl_repeat"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="@{()->holder.onClick(holder.CLICK_REPEAT)}"
+            app:layout_constraintTop_toBottomOf="@id/rl_start_time"
+            app:layout_constraintLeft_toLeftOf="parent"
+            android:padding="20dp">
+
+            <TextView
+                android:id="@+id/tv_repeat_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:text="@string/repeat"
+                android:textColor="@color/black"
+                android:layout_centerVertical="true"
+                android:textSize="20sp"
+                android:textStyle="bold"/>
+
+            <TextView
+                android:id="@+id/tv_repeat_remark"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:layout_toLeftOf="@id/iv_repeat_icon"
+                android:layout_centerVertical="true"
+                android:text="@{vm.repeatRemark}"
+                android:textColor="@color/gray"
+                android:textSize="13sp" />
+
+            <ImageView
+                android:id="@+id/iv_repeat_icon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:background="@drawable/ic_action_name"/>
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/rl_remind_before"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="@{()->holder.onClick(holder.CLICK_REMIND)}"
+            app:layout_constraintTop_toBottomOf="@id/rl_repeat"
+            app:layout_constraintLeft_toLeftOf="parent"
+            android:padding="20dp">
+
+            <TextView
+                android:id="@+id/tv_remind_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:text="@string/remind"
+                android:textColor="@color/black"
+                android:layout_centerVertical="true"
+                android:textSize="20sp"
+                android:textStyle="bold"/>
+
+            <TextView
+                android:id="@+id/tv_remind_remark"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:layout_toLeftOf="@id/iv_remind_icon"
+                android:layout_centerVertical="true"
+                android:maxLines="1"
+                android:ellipsize="end"
+                android:text="@{vm.remindBefore.remindBeforeRemark}"
+                android:textColor="@color/gray"
+                android:textSize="13sp" />
+
+            <ImageView
+                android:id="@+id/iv_remind_icon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:background="@drawable/ic_action_name"/>
+
+        </RelativeLayout>
+
+
+        <EditText
+            android:id="@+id/et_remark"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/input_remark"
+            android:textSize="20sp"
+            app:layout_constraintTop_toBottomOf="@id/rl_remind_before"
+            app:layout_constraintLeft_toLeftOf="parent"
+            android:layout_margin="20dp"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>

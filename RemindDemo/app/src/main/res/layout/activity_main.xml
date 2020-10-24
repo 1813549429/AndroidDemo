@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="holder"
+            type="com.example.reminddemo.ui.MainActivity" />
+
+        <variable
+            name="vm"
+            type="com.example.reminddemo.ui.vm.MainViewModel" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/gray_background"
+        tools:context=".ui.MainActivity">
+
+        <TextView
+            android:id="@+id/tv_date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@{vm.nowDate}"
+            android:textColor="@color/black"
+            android:textStyle="bold"
+            android:textSize="20sp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            android:layout_margin="20dp"/>
+
+        <ImageButton
+            android:id="@+id/ib_more"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/ic_more"
+            android:onClick="@{()->holder.click(holder.CLICK_MORE)}"
+            app:layout_constraintTop_toTopOf="@id/tv_date"
+            app:layout_constraintBottom_toBottomOf="@id/tv_date"
+            app:layout_constraintRight_toRightOf="parent"
+            android:layout_margin="20dp"/>
+
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_item"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_margin="20dp"
+            app:layout_constraintTop_toBottomOf="@id/tv_date"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"/>
+
+        <ImageButton
+            android:id="@+id/ib_add"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:elevation="3dp"
+            android:onClick="@{()->holder.click(holder.CLICK_add)}"
+            android:background="@drawable/blue_button"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            android:layout_margin="30dp"
+            android:src="@drawable/ic_add"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>

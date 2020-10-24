@@ -1,0 +1,224 @@
+package com.example.remind.db.entity;
+
+import android.os.Build;
+
+import androidx.annotation.RequiresApi;
+import androidx.room.ColumnInfo;
+import androidx.room.Entity;
+import androidx.room.ForeignKey;
+import androidx.room.Index;
+import androidx.room.PrimaryKey;
+
+import java.util.Objects;
+
+@Entity(tableName = "remind",
+        foreignKeys = {
+            @ForeignKey(entity = CheckList.class,
+                parentColumns = "id",
+                childColumns = "checkListKey",
+                onDelete = ForeignKey.CASCADE)},
+        indices = {@Index(value = "checkListKey")})
+public class Remind {
+
+    /**
+     * 自增长的id
+     */
+    @PrimaryKey(autoGenerate = true)
+    private int id;
+    /**
+     * 任务的标题
+     */
+    private String title;
+    /**
+     * 任务的备注
+     */
+    private String remark;
+    /**
+     * 任务的执行时间
+     */
+    private long time;
+    /**
+     * 任务的重复类型
+     * 0代表不重复；
+     * 1代表年；
+     * 2代表月；
+     * 3代表周；
+     * 4代表日；
+     */
+    private int repeatType;
+    /**
+     * 重复的间隔，以repeatType单位
+     * 例如：若repeatType为1，，repeatInterval为2则代表每隔两年重复
+     * 若repeatType不为0，则repeatInterval应该有默认值1。
+     */
+    private int repeatInterval;
+    /**
+     * 重复的值，以repeatType为准。
+     * 例：当repeatType为1则代表年，此时的repeatValue可设置的范围应该仅为1-12，代表1月到12月
+     * TODO 以Json形式存储，因为可能会有多选
+     */
+    private String repeatValue;
+    /**
+     * 任务是否已经完成。
+     *
+     */
+    private boolean isComplete;
+    /**
+     * 保存有提前提醒的数据，以时间戳的形式保存，例如提前五分钟就可表示为5分钟对应的毫秒值
+     * TODO 以Json形式存储，因为可能会有多选
+     */
+    private String advance;
+    /**
+     * 保存子任务，子任务仅用字符串来标示，例如 "学习英语"，"打游戏"
+     * TODO 以Json形式存储，因为可能会有多选
+     */
+    private String subTasks;
+    /**
+     * 任务对应的iconId
+     */
+    private int iconId;
+    /**
+     * 外键，对应于清单表中的键，主要用于确定这个任务属于哪个自定义清单中。为0则代表未加入到自定义清单
+     */
+    private int checkListKey;
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public String getRemark() {
+        return remark;
+    }
+
+    public void setRemark(String remark) {
+        this.remark = remark;
+    }
+
+    public long getTime() {
+        return time;
+    }
+
+    public void setTime(long time) {
+        this.time = time;
+    }
+
+    public int getRepeatType() {
+        return repeatType;
+    }
+
+    public void setRepeatType(int repeatType) {
+        this.repeatType = repeatType;
+    }
+
+    public int getRepeatInterval() {
+        return repeatInterval;
+    }
+
+    public void setRepeatInterval(int repeatInterval) {
+        this.repeatInterval = repeatInterval;
+    }
+
+    public boolean isComplete() {
+        return isComplete;
+    }
+
+    public void setComplete(boolean complete) {
+        isComplete = complete;
+    }
+
+    public String getRepeatValue() {
+        return repeatValue;
+    }
+
+    public void setRepeatValue(String repeatValue) {
+        this.repeatValue = repeatValue;
+    }
+
+    public String getAdvance() {
+        return advance;
+    }
+
+    public void setAdvance(String advance) {
+        this.advance = advance;
+    }
+
+    public String getSubTasks() {
+        return subTasks;
+    }
+
+    public void setSubTasks(String subTasks) {
+        this.subTasks = subTasks;
+    }
+
+    public int getCheckListKey() {
+        return checkListKey;
+    }
+
+    public void setCheckListKey(int checkListKey) {
+        this.checkListKey = checkListKey;
+    }
+
+    public int getIconId() {
+        return iconId;
+    }
+
+    public void setIconId(int iconId) {
+        this.iconId = iconId;
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Remind remind = (Remind) o;
+        return id == remind.id &&
+                time == remind.time &&
+                repeatType == remind.repeatType &&
+                repeatInterval == remind.repeatInterval &&
+                isComplete == remind.isComplete &&
+                iconId == remind.iconId &&
+                checkListKey == remind.checkListKey &&
+                Objects.equals(title, remind.title) &&
+                Objects.equals(remark, remind.remark) &&
+                Objects.equals(repeatValue, remind.repeatValue) &&
+                Objects.equals(advance, remind.advance) &&
+                Objects.equals(subTasks, remind.subTasks);
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, title, remark, time, repeatType, repeatInterval, isComplete, repeatValue, advance, subTasks, iconId, checkListKey);
+    }
+
+    @Override
+    public String toString() {
+        return "Remind{" +
+                "id=" + id +
+                ", title='" + title + '\'' +
+                ", remark='" + remark + '\'' +
+                ", time=" + time +
+                ", repeatType=" + repeatType +
+                ", repeatInterval=" + repeatInterval +
+                ", isComplete=" + isComplete +
+                ", repeatValue='" + repeatValue + '\'' +
+                ", advance='" + advance + '\'' +
+                ", subTasks='" + subTasks + '\'' +
+                ", iconId=" + iconId +
+                ", checkListKey=" + checkListKey +
+                '}';
+    }
+}
