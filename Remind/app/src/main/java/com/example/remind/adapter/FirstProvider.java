@@ -29,7 +29,7 @@ public class FirstProvider extends BaseNodeProvider {
     public void convert( BaseViewHolder helper,  BaseNode data) {
         FirstNode entity = (FirstNode) data;
         helper.setText(R.id.title, entity.getTitle());
-        helper.setText(R.id.item_count, entity.getItemCount());
+        helper.setText(R.id.item_count, entity.getItemCount()+"");
         helper.setImageResource(R.id.iv, R.mipmap.arrow_r);
 
         setArrowSpin(helper, data, false);

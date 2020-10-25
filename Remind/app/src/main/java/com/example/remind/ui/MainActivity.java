@@ -13,8 +13,9 @@ import com.example.remind.R;
 import com.example.remind.adapter.FirstNode;
 import com.example.remind.adapter.NodeTreeAdapter;
 import com.example.remind.base.BaseActivity;
-import com.example.remind.databinding.ActivityMainBinding;
+import com.example.remind.enums.MainItemType;
 import com.example.remind.vm.MainViewModel;
+import com.example.remind.databinding.ActivityMainBinding;
 import com.google.android.material.navigation.NavigationView;
 
 import java.util.ArrayList;
@@ -26,6 +27,7 @@ public class MainActivity extends BaseActivity<MainViewModel, ActivityMainBindin
     private DrawerLayout mDrawerLayout;
     private RecyclerView mRvMain;
     private NodeTreeAdapter mAdapter = new NodeTreeAdapter();
+    private List<BaseNode> firstNodeList;
 
 
     @Override
@@ -41,6 +43,7 @@ public class MainActivity extends BaseActivity<MainViewModel, ActivityMainBindin
 
         initMainData();
         initMainView();
+        
     }
 
     private void initMainData() {
@@ -49,9 +52,26 @@ public class MainActivity extends BaseActivity<MainViewModel, ActivityMainBindin
         //从数据库查数据
 
         //设置一级Item的数据
-        List<BaseNode> firstNodeList = new ArrayList<>();
-        FirstNode firstNode = new FirstNode();
-        firstNodeList.add()
+        firstNodeList = new ArrayList<>();
+        //设置二级Item的数据,
+        List<BaseNode> secondNodeListOverdue = new ArrayList<>();
+        List<BaseNode> secondNodeListToday = new ArrayList<>();
+        List<BaseNode> secondNodeListNextDays = new ArrayList<>();
+        List<BaseNode> secondNodeListNotScheduled = new ArrayList<>();
+        List<BaseNode> secondNodeListCompleted = new ArrayList<>();
+
+        FirstNode firstNodeOverdue = new FirstNode(secondNodeListOverdue,getString(R.string.overdue),secondNodeListOverdue.size(), MainItemType.Overdue);
+        FirstNode firstNodeToday = new FirstNode(secondNodeListToday,getString(R.string.today),secondNodeListToday.size(), MainItemType.Today);
+        FirstNode firstNodeNextDays = new FirstNode(secondNodeListNextDays,getString(R.string.next_seven_days),secondNodeListNextDays.size(), MainItemType.NextSevenDays);
+        FirstNode firstNodeNotScheduled = new FirstNode(secondNodeListNotScheduled,getString(R.string.not_scheduled),secondNodeListNotScheduled.size(), MainItemType.NotScheduled);
+        FirstNode firstNodeCompleted = new FirstNode(secondNodeListCompleted,getString(R.string.completed),secondNodeListCompleted.size(), MainItemType.Completed);
+
+        firstNodeList.add(firstNodeOverdue);
+        firstNodeList.add(firstNodeToday);
+        firstNodeList.add(firstNodeNextDays);
+        firstNodeList.add(firstNodeNotScheduled);
+        firstNodeList.add(firstNodeCompleted);
+
     }
 
     private void initMainView() {
@@ -59,7 +79,7 @@ public class MainActivity extends BaseActivity<MainViewModel, ActivityMainBindin
         mRvMain = findViewById(R.id.rv_main);
         mRvMain.setLayoutManager(new LinearLayoutManager(this));
         mRvMain.setAdapter(mAdapter);
-
+        mAdapter.setList(firstNodeList);
         mNavigation = findViewById(R.id.nav_view);
         mDrawerLayout = findViewById(R.id.drawer_layout);
         mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);

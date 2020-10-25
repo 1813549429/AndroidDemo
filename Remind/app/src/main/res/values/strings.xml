@@ -5,4 +5,7 @@
     <string name="inbox">Inbox</string>
     <string name="add_list">Add List</string>
     <string name="settings">Settings</string>
+    <string name="overdue">Overdue</string>
+    <string name="completed">Completed</string>
+    <string name="not_scheduled">Not Scheduled</string>
 </resources>

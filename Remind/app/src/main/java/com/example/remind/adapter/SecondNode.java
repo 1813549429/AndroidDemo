@@ -4,7 +4,7 @@ import androidx.annotation.Nullable;
 
 import com.chad.library.adapter.base.entity.node.BaseExpandNode;
 import com.chad.library.adapter.base.entity.node.BaseNode;
-import com.example.remind.db.entity.CheckList;
+import com.example.remind.db.entity.CheckListEntity;
 import com.example.remind.db.entity.Remind;
 
 
@@ -14,17 +14,17 @@ public class SecondNode extends BaseExpandNode {
 
     private List<BaseNode> childNode;
     private Remind remindData;
-    private CheckList checkListData;
+    private CheckListEntity checkListEntityData;
 
 
-    public SecondNode(Remind remindData, CheckList checkListData) {
+    public SecondNode(Remind remindData, CheckListEntity checkListEntityData) {
         this.remindData = remindData;
-        this.checkListData = checkListData;
+        this.checkListEntityData = checkListEntityData;
 
     }
 
-    public CheckList getCheckListData() {
-        return checkListData;
+    public CheckListEntity getCheckListEntityData() {
+        return checkListEntityData;
     }
 
     public Remind getRemindData() {

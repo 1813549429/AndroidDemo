@@ -9,7 +9,7 @@ import androidx.room.PrimaryKey;
 import java.util.Objects;
 
 @Entity(tableName = "checkList")
-public class CheckList {
+public class CheckListEntity {
 
     /**
      * 自增长id
@@ -56,10 +56,10 @@ public class CheckList {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        CheckList checkList = (CheckList) o;
-        return id == checkList.id &&
-                position == checkList.position &&
-                Objects.equals(title, checkList.title);
+        CheckListEntity checkListEntity = (CheckListEntity) o;
+        return id == checkListEntity.id &&
+                position == checkListEntity.position &&
+                Objects.equals(title, checkListEntity.title);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)

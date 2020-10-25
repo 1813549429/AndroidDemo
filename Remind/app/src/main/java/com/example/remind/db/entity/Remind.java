@@ -3,7 +3,6 @@ package com.example.remind.db.entity;
 import android.os.Build;
 
 import androidx.annotation.RequiresApi;
-import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.ForeignKey;
 import androidx.room.Index;
@@ -13,11 +12,11 @@ import java.util.Objects;
 
 @Entity(tableName = "remind",
         foreignKeys = {
-            @ForeignKey(entity = CheckList.class,
+            @ForeignKey(entity = CheckListEntity.class,
                 parentColumns = "id",
-                childColumns = "checkListKey",
+                childColumns = "checkListId",
                 onDelete = ForeignKey.CASCADE)},
-        indices = {@Index(value = "checkListKey")})
+        indices = {@Index(value = "checkListId")})
 public class Remind {
 
     /**
@@ -80,7 +79,7 @@ public class Remind {
     /**
      * 外键，对应于清单表中的键，主要用于确定这个任务属于哪个自定义清单中。为0则代表未加入到自定义清单
      */
-    private int checkListKey;
+    private int checkListId;
 
     public int getId() {
         return id;
@@ -162,12 +161,12 @@ public class Remind {
         this.subTasks = subTasks;
     }
 
-    public int getCheckListKey() {
-        return checkListKey;
+    public int getCheckListId() {
+        return checkListId;
     }
 
-    public void setCheckListKey(int checkListKey) {
-        this.checkListKey = checkListKey;
+    public void setCheckListId(int checkListId) {
+        this.checkListId = checkListId;
     }
 
     public int getIconId() {
@@ -190,7 +189,7 @@ public class Remind {
                 repeatInterval == remind.repeatInterval &&
                 isComplete == remind.isComplete &&
                 iconId == remind.iconId &&
-                checkListKey == remind.checkListKey &&
+                checkListId == remind.checkListId &&
                 Objects.equals(title, remind.title) &&
                 Objects.equals(remark, remind.remark) &&
                 Objects.equals(repeatValue, remind.repeatValue) &&
@@ -201,7 +200,7 @@ public class Remind {
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     @Override
     public int hashCode() {
-        return Objects.hash(id, title, remark, time, repeatType, repeatInterval, isComplete, repeatValue, advance, subTasks, iconId, checkListKey);
+        return Objects.hash(id, title, remark, time, repeatType, repeatInterval, isComplete, repeatValue, advance, subTasks, iconId, checkListId);
     }
 
     @Override
@@ -218,7 +217,7 @@ public class Remind {
                 ", advance='" + advance + '\'' +
                 ", subTasks='" + subTasks + '\'' +
                 ", iconId=" + iconId +
-                ", checkListKey=" + checkListKey +
+                ", checkListKey=" + checkListId +
                 '}';
     }
 }
