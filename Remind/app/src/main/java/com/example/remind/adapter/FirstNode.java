@@ -13,13 +13,21 @@ public class FirstNode extends BaseExpandNode {
     private String title;
     private int itemCount;
     private MainItemType type;
+    private String bgColor;
 
-    public FirstNode(List<BaseNode> childNode, String title, int itemCount, MainItemType type) {
+    public FirstNode(List<BaseNode> childNode, String title, int itemCount, MainItemType type, String bgColor) {
+
+        for (BaseNode baseNode : childNode) {
+            SecondNode secondNode = (SecondNode) baseNode;
+            secondNode.setMainItemType(type);
+        }
         this.childNode = childNode;
+
         this.title = title;
         this.itemCount = itemCount;
         this.type = type;
-        setExpanded(false);
+        this.bgColor = bgColor;
+        setExpanded(true);
     }
 
     public String getTitle() {
@@ -33,6 +41,8 @@ public class FirstNode extends BaseExpandNode {
     public MainItemType getType() {
         return type;
     }
+
+    public String getBgColor() {return bgColor;}
 
 
     @Override

@@ -1,3 +1,4 @@
+include ':ncalendar'
 include ':library'
 include ':app'
 rootProject.name = "Remind"

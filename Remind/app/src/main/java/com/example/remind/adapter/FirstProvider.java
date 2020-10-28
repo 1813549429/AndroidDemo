@@ -1,5 +1,8 @@
 package com.example.remind.adapter;
 
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.view.View;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.ImageView;
@@ -30,8 +33,8 @@ public class FirstProvider extends BaseNodeProvider {
         FirstNode entity = (FirstNode) data;
         helper.setText(R.id.title, entity.getTitle());
         helper.setText(R.id.item_count, entity.getItemCount()+"");
-        helper.setImageResource(R.id.iv, R.mipmap.arrow_r);
-
+        helper.setImageResource(R.id.iv, R.mipmap.expand);
+        helper.findView(R.id.ll_item).setBackgroundColor(Color.parseColor(entity.getBgColor()));
         setArrowSpin(helper, data, false);
     }
 
@@ -63,10 +66,10 @@ public class FirstProvider extends BaseNodeProvider {
             if (isAnimate) {
                 ViewCompat.animate(imageView).setDuration(200)
                         .setInterpolator(new DecelerateInterpolator())
-                        .rotation(90f)
+                        .rotation(-90f)
                         .start();
             } else {
-                imageView.setRotation(90f);
+                imageView.setRotation(-90f);
             }
         }
     }
@@ -76,4 +79,5 @@ public class FirstProvider extends BaseNodeProvider {
         // 这里使用payload进行增量刷新（避免整个item刷新导致的闪烁，不自然）
         getAdapter().expandOrCollapse(position, true, true, NodeTreeAdapter.EXPAND_COLLAPSE_PAYLOAD);
     }
+
 }

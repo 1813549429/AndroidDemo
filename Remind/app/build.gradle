@@ -48,6 +48,8 @@ dependencies {
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
     implementation project(path: ':library')
+    implementation project(path: ':ncalendar')
+
 
 
 
@@ -69,5 +71,8 @@ dependencies {
 
     // Saved state module for ViewModel
     implementation "androidx.lifecycle:lifecycle-viewmodel-savedstate:$lifecycle_version"
+
+    //时间选择器库
+    compile 'com.zhy:autolayout:1.4.3'
 
 }
