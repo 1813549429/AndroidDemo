@@ -12,10 +12,10 @@ public class FirstNode extends BaseExpandNode {
     private List<BaseNode> childNode;
     private String title;
     private int itemCount;
-    private MainItemType type;
+    private int type;
     private String bgColor;
 
-    public FirstNode(List<BaseNode> childNode, String title, int itemCount, MainItemType type, String bgColor) {
+    public FirstNode(List<BaseNode> childNode, String title, int itemCount, int type, String bgColor) {
 
         for (BaseNode baseNode : childNode) {
             SecondNode secondNode = (SecondNode) baseNode;
@@ -38,7 +38,7 @@ public class FirstNode extends BaseExpandNode {
         return itemCount;
     }
 
-    public MainItemType getType() {
+    public int getType() {
         return type;
     }
 
@@ -48,5 +48,10 @@ public class FirstNode extends BaseExpandNode {
     @Override
     public List<BaseNode> getChildNode() {
         return childNode;
+    }
+
+    @Override
+    public void setChildNode(List<BaseNode> childNode) {
+        this.childNode = childNode;
     }
 }

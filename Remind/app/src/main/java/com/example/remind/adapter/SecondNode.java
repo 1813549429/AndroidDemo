@@ -10,13 +10,14 @@ import com.example.remind.enums.MainItemType;
 
 
 import java.util.List;
+import java.util.Objects;
 
 public class SecondNode extends BaseExpandNode {
 
     private List<BaseNode> childNode;
     private Remind remindData;
     private CheckListEntity checkListEntityData;
-    private MainItemType mainItemType;
+    private int mainItemType;
 
     public SecondNode(Remind remindData, CheckListEntity checkListEntityData) {
         this.remindData = remindData;
@@ -32,11 +33,11 @@ public class SecondNode extends BaseExpandNode {
         return remindData;
     }
 
-    public MainItemType getMainItemType() {
+    public int getMainItemType() {
         return mainItemType;
     }
 
-    public void setMainItemType(MainItemType mainItemType) {
+    public void setMainItemType(int mainItemType) {
         this.mainItemType = mainItemType;
     }
 
@@ -44,5 +45,23 @@ public class SecondNode extends BaseExpandNode {
     @Override
     public List<BaseNode> getChildNode() {
         return null;
+    }
+
+    @Override
+    public void setChildNode(List<BaseNode> childNode) {
+        this.childNode = childNode;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        SecondNode that = (SecondNode) o;
+        return Objects.equals(remindData, that.remindData);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(remindData);
     }
 }

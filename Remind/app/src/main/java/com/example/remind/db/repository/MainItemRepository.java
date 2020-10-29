@@ -35,6 +35,11 @@ public class MainItemRepository {
         return mDatabase.remindDao().loadReminds();
     }
 
+    public List<Remind> getRemindsSync() {
+        return mDatabase.remindDao().loadRemindsSync();
+    }
+
+
     public LiveData<List<CheckListEntity>> getCheckLists() {
         return mDatabase.checkListDao().loadAllCheckLists();
     }

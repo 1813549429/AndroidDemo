@@ -44,19 +44,19 @@ public class DateUtil {
     public static String numberToWeek(int iWeek) {
         switch (iWeek) {
             case 0:
-                return "周日";
+                return "Sunday";
             case 1:
-                return "周一";
+                return "Monday";
             case 2:
-                return "周二";
+                return "Tuesday";
             case 3:
-                return "周三";
+                return "Wednesday";
             case 4:
-                return "周四";
+                return "Thursday";
             case 5:
-                return "周五";
+                return "Friday";
             default:
-                return "周六";
+                return "Saturday";
         }
     }
 
@@ -106,6 +106,40 @@ public class DateUtil {
                 return AppContext.getContext().getString(R.string.november);
             default:
                 return AppContext.getContext().getString(R.string.december);
+        }
+    }
+
+    public static long intArrayToLong(int[] date) {
+        String dateStr = date[0] + "-" + date[1] + "-" +
+                date[2] + "-" + date[3] + "-" + date[4];
+        return strToLong(dateStr, "yyyy-MM-dd-HH-mm");
+    }
+
+    public static int getYearMonthDay(long currentTime) {
+        SimpleDateFormat sdr = new SimpleDateFormat("yyyyMMdd");
+        Date date = new Date(currentTime);
+        return Integer.parseInt(sdr.format(date));
+    }
+
+    public static String longToStr(long time) {
+        int date = getYearMonthDay(time);
+        int currentDate = getYearMonthDay(System.currentTimeMillis());
+        if(date - currentDate == 0) {
+            return AppContext.getContext().getString(R.string.today);
+        }else if(date - currentDate == 1) {
+            return AppContext.getContext().getString(R.string.tomorrow);
+        } else if(date - currentDate == -1) {
+            return AppContext.getContext().getString(R.string.yesterday);
+        } else {
+            int[] allTime = getDay(time);
+            String weekDay = numberToWeek(allTime[5]).substring(0,3);
+            String monthDay = numberToMonth(allTime[1]).substring(0,3);
+            int weekCount = 1;
+            while (allTime[2] >= 7) {
+                weekCount++;
+                allTime[2] -= 7;
+            }
+            return weekDay+","+monthDay+weekCount;
         }
     }
 

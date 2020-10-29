@@ -31,15 +31,6 @@
     <string name="hide_completed">Hide Completed</string>
     <string name="show_completed">Show Completed</string>
 
-    <!--时间选择器类用到的 -->
-    <string name="cancle">取消</string>
-    <string name="title">请选择时间</string>
-    <string name="commit">确定</string>
-    <string name="year">年</string>
-    <string name="month">月</string>
-    <string name="day">日</string>
-    <string name="hour">时</string>
-    <string name="minute">分</string>
     <string name="am">AM</string>
     <string name="pm">PM</string>
     <string name="reminder">Reminder</string>
@@ -52,6 +43,19 @@
     <string name="three_day_early">3 days early</string>
     <string name="one_week_early">1 week early</string>
     <string name="two_day_early">2 days early</string>
+    <string name="repeat">Repeat</string>
+    <string name="daily">Daily</string>
+    <string name="every_weekday">Every Weekday(Mon-Fri)</string>
+    <string name="weekly">Weekly(Tue)</string>
+    <string name="monthly">Monthly(The 20 day)</string>
+    <string name="yearly">Yearly(Oct 20)</string>
+    <string name="bono_reminder">Bono reminder</string>
+    <string name="jump">Jump</string>
+    <string name="select_all">Select all</string>
+    <string name="select">Select</string>
+    <string name="delete">Delete</string>
+    <string name="tomorrow">Tomorrow</string>
+    <string name="yesterday">Yesterday</string>
 
 
 </resources>

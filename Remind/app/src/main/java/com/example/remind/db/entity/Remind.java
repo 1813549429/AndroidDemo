@@ -1,23 +1,26 @@
 package com.example.remind.db.entity;
 
 import android.os.Build;
+import android.os.Parcel;
+import android.os.Parcelable;
 
 import androidx.annotation.RequiresApi;
 import androidx.room.Entity;
 import androidx.room.ForeignKey;
+import androidx.room.Ignore;
 import androidx.room.Index;
 import androidx.room.PrimaryKey;
 
 import java.util.Objects;
 
-@Entity(tableName = "remind",
-        foreignKeys = {
-            @ForeignKey(entity = CheckListEntity.class,
-                parentColumns = "id",
-                childColumns = "checkListId",
-                onDelete = ForeignKey.CASCADE)},
-        indices = {@Index(value = "checkListId")})
-public class Remind {
+//foreignKeys = {
+//            @ForeignKey(entity = CheckListEntity.class,
+//                parentColumns = "id",
+//                childColumns = "checkListId",
+//                onDelete = ForeignKey.CASCADE)},
+//        indices = {@Index(value = "checkListId")}
+@Entity(tableName = "remind")
+public class Remind implements Parcelable {
 
     /**
      * 自增长的id
@@ -62,8 +65,13 @@ public class Remind {
      *
      */
     private boolean isComplete;
+
     /**
-     * 保存有提前提醒的数据，以时间戳的形式保存，例如提前五分钟就可表示为5分钟对应的毫秒值
+     * 是否所有设置都已完成
+     */
+    private boolean isSetting;
+    /**
+     * 保存有提前提醒的数据，以时间戳的形式保存，例如提前五分钟就可表示为5分钟对应的毫秒值,单次提醒用0表示,不提醒用-1表示
      * TODO 以Json形式存储，因为可能会有多选
      */
     private String advance;
@@ -77,9 +85,43 @@ public class Remind {
      */
     private int iconId;
     /**
-     * 外键，对应于清单表中的键，主要用于确定这个任务属于哪个自定义清单中。为0则代表未加入到自定义清单
+     * 外键，对应于清单表中的键，主要用于确定这个任务属于哪个自定义清单中。
      */
-    private int checkListId;
+//    private int checkListId;
+
+    public Remind() {
+
+    }
+
+    @Ignore
+    protected Remind(Parcel in) {
+        id = in.readInt();
+        title = in.readString();
+        remark = in.readString();
+        time = in.readLong();
+        repeatType = in.readInt();
+        repeatInterval = in.readInt();
+        repeatValue = in.readString();
+        isComplete = in.readByte() != 0;
+        isSetting = in.readByte() != 0;
+        advance = in.readString();
+        subTasks = in.readString();
+        iconId = in.readInt();
+//        checkListId = in.readInt();
+    }
+
+    @Ignore
+    public static final Creator<Remind> CREATOR = new Creator<Remind>() {
+        @Override
+        public Remind createFromParcel(Parcel in) {
+            return new Remind(in);
+        }
+
+        @Override
+        public Remind[] newArray(int size) {
+            return new Remind[size];
+        }
+    };
 
     public int getId() {
         return id;
@@ -161,13 +203,13 @@ public class Remind {
         this.subTasks = subTasks;
     }
 
-    public int getCheckListId() {
-        return checkListId;
-    }
-
-    public void setCheckListId(int checkListId) {
-        this.checkListId = checkListId;
-    }
+//    public int getCheckListId() {
+//        return checkListId;
+//    }
+//
+//    public void setCheckListId(int checkListId) {
+//        this.checkListId = checkListId;
+//    }
 
     public int getIconId() {
         return iconId;
@@ -177,19 +219,27 @@ public class Remind {
         this.iconId = iconId;
     }
 
+    public boolean isSetting() {
+        return isSetting;
+    }
+
+    public void setSetting(boolean setting) {
+        isSetting = setting;
+    }
+
+    @Ignore
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Remind remind = (Remind) o;
-        return id == remind.id &&
-                time == remind.time &&
+        return time == remind.time &&
                 repeatType == remind.repeatType &&
                 repeatInterval == remind.repeatInterval &&
                 isComplete == remind.isComplete &&
                 iconId == remind.iconId &&
-                checkListId == remind.checkListId &&
+//                checkListId == remind.checkListId &&
                 Objects.equals(title, remind.title) &&
                 Objects.equals(remark, remind.remark) &&
                 Objects.equals(repeatValue, remind.repeatValue) &&
@@ -197,12 +247,14 @@ public class Remind {
                 Objects.equals(subTasks, remind.subTasks);
     }
 
+    @Ignore
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     @Override
     public int hashCode() {
-        return Objects.hash(id, title, remark, time, repeatType, repeatInterval, isComplete, repeatValue, advance, subTasks, iconId, checkListId);
+        return Objects.hash(title, remark, time, repeatType, repeatInterval, isComplete, repeatValue, advance, subTasks, iconId);
     }
 
+    @Ignore
     @Override
     public String toString() {
         return "Remind{" +
@@ -217,7 +269,31 @@ public class Remind {
                 ", advance='" + advance + '\'' +
                 ", subTasks='" + subTasks + '\'' +
                 ", iconId=" + iconId +
-                ", checkListKey=" + checkListId +
+//                ", checkListKey=" + checkListId +
                 '}';
+    }
+
+    @Ignore
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Ignore
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(id);
+        dest.writeString(title);
+        dest.writeString(remark);
+        dest.writeLong(time);
+        dest.writeInt(repeatType);
+        dest.writeInt(repeatInterval);
+        dest.writeString(repeatValue);
+        dest.writeByte((byte) (isComplete ? 1 : 0));
+        dest.writeByte((byte) (isSetting ? 1 : 0));
+        dest.writeString(advance);
+        dest.writeString(subTasks);
+        dest.writeInt(iconId);
+//        dest.writeInt(checkListId);
     }
 }

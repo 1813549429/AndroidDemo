@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/ll_remind"
+    android:id="@+id/ll_repeat"
     android:paddingTop="20dp"
     android:gravity="center_vertical"
     android:orientation="horizontal">
@@ -13,7 +13,7 @@
         android:clickable="false"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@drawable/item_remind_checkbox"/>
+        android:background="@drawable/item_repeat_checkbox"/>
 
     <TextView
         android:id="@+id/tv_text"

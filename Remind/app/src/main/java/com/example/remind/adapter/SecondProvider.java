@@ -13,9 +13,13 @@ import com.chad.library.adapter.base.viewholder.BaseViewHolder;
 import com.example.remind.R;
 import com.example.remind.db.entity.CheckListEntity;
 import com.example.remind.db.entity.Remind;
+import com.example.remind.ui.MainActivity;
+import com.example.remind.utils.DateUtil;
 
 
 public class SecondProvider extends BaseNodeProvider {
+
+    public static boolean isSelectAll = false;
 
     @Override
     public int getItemViewType() {
@@ -33,47 +37,54 @@ public class SecondProvider extends BaseNodeProvider {
         Remind remindData = entity.getRemindData();
         CheckListEntity checkListEntityData = entity.getCheckListEntityData();
 
-
-
         TextView tv_item_title = helper.findView(R.id.tv_item_title);
         TextView tv_item_date = helper.findView(R.id.tv_item_date);
         ImageView iv_hide = helper.findView(R.id.iv_hide);
-
+        CheckedTextView checkedTextView = helper.findView(R.id.cb_item_complete);
+        if(isSelectAll) {
+            checkedTextView.setChecked(true);
+        }else {
+            checkedTextView.setChecked(false);
+        }
         if(remindData.getTitle() != null) {
             tv_item_title.setText(remindData.getTitle());
         }
         if(remindData.getTime() != 0) {
-            tv_item_date.setText(remindData.getTime()+"");
+            tv_item_date.setText(DateUtil.longToStr(remindData.getTime()));
         }
         ImageView iv_item_img = helper.findView(R.id.iv_item_img);
         switch (entity.getMainItemType()) {
-            case Overdue:
+            case MainActivity
+                    .OVERDUE:
                 iv_item_img.setBackgroundResource(R.mipmap.overdue);
                 tv_item_date.setTextColor(Color.parseColor("#EB5757"));
                 break;
-            case Today:
+            case MainActivity
+                    .TODAY:
                 iv_item_img.setBackgroundResource(R.mipmap.today);
                 tv_item_date.setTextColor(Color.parseColor("#2F80ED"));
 
                 break;
-            case NextSevenDays:
+            case MainActivity
+                    .NEXT_SEVEN_DAYS:
                 iv_item_img.setBackgroundResource(R.mipmap.next_seven_days);
                 tv_item_date.setTextColor(Color.parseColor("#50000000"));
                 break;
 
-            case NotScheduled:
+            case MainActivity
+                    .NOT_SCHEDULED:
                 iv_item_img.setVisibility(View.GONE);
                 tv_item_date.setVisibility(View.GONE);
                 break;
 
-            case Completed:
+            case MainActivity
+                    .COMPLETED:
                 iv_hide.setVisibility(View.VISIBLE);
                 tv_item_date.setTextColor(Color.parseColor("#2F80ED"));
                 tv_item_title.getPaint().setFlags(Paint. STRIKE_THRU_TEXT_FLAG);
                 break;
         }
         if(remindData.isComplete()) {
-            CheckedTextView checkedTextView = helper.findView(R.id.cb_item_complete);
             checkedTextView.setBackgroundResource(R.mipmap.finish);
         }
     }
@@ -89,4 +100,6 @@ public class SecondProvider extends BaseNodeProvider {
 
         return super.onLongClick(helper, view, data, position);
     }
+
+
 }
