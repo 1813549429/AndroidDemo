@@ -11,13 +11,31 @@
 
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
+        <item name="android:minHeight">60dp</item>
         <item name="layout_constraintLeft_toLeftOf">parent</item>
         <item name="android:gravity">center_vertical</item>
         <item name="android:clickable">true</item>
+        <item name="android:fontFamily">@font/inter_regular</item>
         <item name="android:focusable">true</item>
         <item name="android:padding">@dimen/nav_item_padding</item>
         <item name="android:textSize">@dimen/nav_text_size</item>
+        <item name="android:textColor">@color/black</item>
         <item name="android:drawablePadding">@dimen/nav_item_drawable_padding</item>
 
     </style>
+
+    <style name="Translucent" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowBackground">@color/translucent</item>
+        <item name="android:windowIsTranslucent">true</item>
+    </style>
+
+    <style name="dialogstyle" parent="android:Animation">
+        <!-- 指定显示的动画xml  -->
+        <item name="android:windowEnterAnimation">@anim/dialog_enter</item>
+        <!-- 指定消失的动画xml  -->
+        <item name="android:windowExitAnimation">@anim/dialog_exit</item>
+    </style>
+
+
 </resources>

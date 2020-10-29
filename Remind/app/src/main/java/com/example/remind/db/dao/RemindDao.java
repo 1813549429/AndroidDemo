@@ -14,14 +14,14 @@ import java.util.List;
 @Dao
 public interface RemindDao {
 
-    @Query("SELECT * FROM Remind WHERE checkListId = :checkListId")
-    LiveData<List<Remind>> loadReminds(int checkListId);
+//    @Query("SELECT * FROM Remind WHERE checkListId = :checkListId")
+//    LiveData<List<Remind>> loadReminds(int checkListId);
 
     @Query("SELECT * FROM Remind")
     LiveData<List<Remind>> loadReminds();
 
-    @Query("SELECT * FROM Remind WHERE checkListId = :checkListId")
-    List<Remind> loadRemindsSync(int checkListId);
+//    @Query("SELECT * FROM Remind WHERE checkListId = :checkListId")
+//    List<Remind> loadRemindsSync(int checkListId);
 
     @Query("SELECT * FROM Remind")
     List<Remind> loadRemindsSync();
