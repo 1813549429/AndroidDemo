@@ -1,11 +1,16 @@
 package com.example.remind.utils;
 
+import android.content.Context;
+import android.text.TextUtils;
+
 import com.example.remind.R;
 import com.example.remind.app.AppContext;
+import com.example.remind.db.entity.Remind;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 public class DateUtil {
 
@@ -141,6 +146,75 @@ public class DateUtil {
             }
             return weekDay+","+monthDay+weekCount;
         }
+    }
+
+    /**
+     * 将Remind对象转化成可供显示在屏幕的字符串数组
+     * @param remind
+     * @return  数组长度为5，从0-4分别代表标题、设置的时间、提前提醒的时间、重复的时间、备注
+     */
+    public static String[] remindToStr(Remind remind) {
+        Context context = AppContext.getContext();
+        String[] strings = new String[5];
+        strings[0] = remind.getTitle();
+        strings[4] = remind.getRemark();
+        //将时间戳显示成需要显示的样式
+        int[] days = getDay(remind.getTime());
+        if(days[3] >= 12) {
+            strings[1] = days[3]-12 + ":" + days[4] + " PM";
+        }else {
+            strings[1] = days[3] + ":" + days[4] + " AM";
+        }
+        if(remind.getAdvance() != null) {
+            List<String> advanceList = JsonUtil.jsonToStrList(remind.getAdvance());
+            StringBuilder builder = new StringBuilder();
+            for (String advanceTime : advanceList) {
+                int advanceDate = Integer.parseInt(advanceTime);
+                if (advanceDate == -1) {
+                    builder.append(context.getString(R.string.none) + ",");
+                }else if (advanceDate == 0) {
+                    builder.append(context.getString(R.string.one_time) + ",");
+                }else if (advanceDate == 5*60*1000) {
+                    builder.append(context.getString(R.string.five_mins_early) + ",");
+                }else if (advanceDate == 30*60*1000) {
+                    builder.append(context.getString(R.string.thirty_mins_early) + ",");
+                } else if (advanceDate == 60*60*1000) {
+                    builder.append(context.getString(R.string.one_hour_early) + ",");
+                }else if (advanceDate == 24*60*60*1000) {
+                    builder.append(context.getString(R.string.one_day_early) + ",");
+                }else if (advanceDate == 2*24*60*60*1000) {
+                    builder.append(context.getString(R.string.two_day_early) + ",");
+                }else if (advanceDate == 3*24*60*60*1000) {
+                    builder.append(context.getString(R.string.three_day_early) + ",");
+                }else if (advanceDate == 7*24*60*60*1000) {
+                    builder.append(context.getString(R.string.one_week_early));
+                }
+            }
+            builder.deleteCharAt(builder.length()-1);
+            strings[2] = builder.toString();
+        }
+
+        int repeatType = remind.getRepeatType();
+        int repeatInterval = remind.getRepeatInterval();
+        String repeatValue = remind.getRepeatValue();
+        List<String> repeatValueList = null;
+        if(!TextUtils.isEmpty(repeatValue)) {
+            repeatValueList = JsonUtil.jsonToStrList(repeatValue);
+        }
+        if (repeatType == 0) {
+            strings[3] = context.getString(R.string.none);
+        }else if (repeatType == 1) {
+            strings[3] = context.getString(R.string.yearly);
+        }else if (repeatType == 2) {
+            strings[3] = context.getString(R.string.monthly);
+        }else if (repeatValueList != null && repeatType == 3 && repeatValueList.size()==1) {
+            strings[3] = context.getString(R.string.weekly);
+        }else if(repeatValueList != null && repeatType == 3 && repeatValueList.size()==5) {
+            strings[3] = context.getString(R.string.every_weekday);
+        } else if (repeatType == 4) {
+            strings[3] = context.getString(R.string.daily);
+        }
+        return strings;
     }
 
 }

@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -34,8 +35,8 @@ import com.example.remind.base.BaseActivity;
 import com.example.remind.db.AppDataBase;
 import com.example.remind.db.entity.Remind;
 import com.example.remind.db.repository.MainItemRepository;
-import com.example.remind.enums.MainItemType;
 import com.example.remind.utils.DateUtil;
+import com.example.remind.view.MyLinearLayoutManager;
 import com.example.remind.vm.MainViewModel;
 import com.example.remind.databinding.ActivityMainBinding;
 import com.google.android.material.navigation.NavigationView;
@@ -49,6 +50,7 @@ import java.util.Map;
 public class MainActivity extends BaseActivity<MainViewModel, ActivityMainBinding> implements View.OnClickListener {
 
     private static final int ADD_REMIND = 0;
+    private static final int EDIT_REMIND = 1;
     private NavigationView mNavigation;
     private DrawerLayout mDrawerLayout;
     private RecyclerView mRvMain;
@@ -137,28 +139,35 @@ public class MainActivity extends BaseActivity<MainViewModel, ActivityMainBindin
         firstNodeList.add(firstNodeCompleted);
     }
 
-    private void addSecondNode(Remind remind) {
+    private List<FirstNode> addSecondNode(Remind remind) {
         SecondNode secondNode = new SecondNode(remind, null);
-
+        List<FirstNode> addNode = new ArrayList<>();
         if(isCompletedData(remind)) {
             secondNodeListCompleted.add(secondNode);
+            addNode.add(firstNodeCompleted);
+            return addNode;
         }
 
         if(isNextDaysData(remind)) {
             secondNodeListNextDays.add(secondNode);
+            addNode.add(firstNodeNextDays);
         }
 
         if(isOverdueData(remind)) {
             secondNodeListOverdue.add(secondNode);
+            addNode.add(firstNodeOverdue);
         }
 
         if(isNotScheduledData(remind)) {
             secondNodeListNotScheduled.add(secondNode);
+            addNode.add(firstNodeNotScheduled);
         }
 
         if(isTodayData(remind)) {
             secondNodeListToday.add(secondNode);
+            addNode.add(firstNodeToday);
         }
+        return addNode;
     }
 
 
@@ -245,18 +254,43 @@ public class MainActivity extends BaseActivity<MainViewModel, ActivityMainBindin
                 mAdapter.expandOrCollapse(position, true, true, NodeTreeAdapter.EXPAND_COLLAPSE_PAYLOAD);
                 //同样需要屏蔽一级菜单
                 if(view.findViewById(R.id.item_count) == null) {
+                    Remind remind = ((SecondNode)adapter.getItem(position)).getRemindData();
                     if(isLongSelect) {
                         CheckedTextView checkedTextView = view.findViewById(R.id.cb_item_complete);
                         checkedTextView.setChecked(!checkedTextView.isChecked());
                         if(checkedTextView.isChecked()) {
-                            checkedRemindList.add(((SecondNode)adapter.getItem(position)).getRemindData());
+                            checkedRemindList.add(remind);
                         }else {
-                            checkedRemindList.remove(((SecondNode)adapter.getItem(position)).getRemindData());
+                            checkedRemindList.remove(remind);
                         }
                         mTvTitle.setText(checkedRemindList.size() + " " + getString(R.string.select));
                         mTvTitle.setVisibility(View.VISIBLE);
                     }else {
 
+                        Intent intent = new Intent(MainActivity.this, EditActivity.class);
+                        intent.putExtra("remind", remind);
+                        startActivityForResult(intent, EDIT_REMIND);
+
+//                        SecondNode secondNode = (SecondNode) mAdapter.getItem(position);
+//                        Remind remind = secondNode.getRemindData();
+//                        remind.setComplete(!remind.isComplete());
+//                        secondNode.setRemindData(remind);
+//
+//                        if(remind.isComplete()) {
+//                            mAdapter.nodeSetData(firstNodeCompleted, 0, secondNode);
+//                        }else {
+//                            List<FirstNode> baseNodes = addSecondNode(remind);
+//                            for (FirstNode firstNode : baseNodes) {
+//                                mAdapter.setData(firstNodeList.indexOf(firstNode), firstNode);
+//                            }
+//                        }
+//
+//                        AppContext.executors.diskIO().execute(new Runnable() {
+//                            @Override
+//                            public void run() {
+//                                repository.insertRemind(remind);
+//                            }
+//                        });
                     }
                 }
 
@@ -442,13 +476,11 @@ public class MainActivity extends BaseActivity<MainViewModel, ActivityMainBindin
         if(requestCode == ADD_REMIND) {
             if(data != null) {
                 Remind remind = data.getParcelableExtra("remind");
-                addSecondNode(remind);
-                if(currentText.equals(getString(R.string.today))) {
-                    reloadToday();
-                }else if(currentText.equals(getString(R.string.inbox))) {
-                    reloadInbox();
-                }else if (currentText.equals(getString(R.string.next_seven_days))) {
-                    reloadNextSevenDays();
+                List<FirstNode> firstNodeListData = addSecondNode(remind);
+                for (FirstNode firstNode :
+                        firstNodeListData) {
+                    int index = firstNodeList.indexOf(firstNode);
+                    mAdapter.setData(index, firstNode);
                 }
             }
         }
@@ -513,11 +545,6 @@ public class MainActivity extends BaseActivity<MainViewModel, ActivityMainBindin
                         @Override
                         public void run() {
                             //需要上一个数据执行完成才能继续执行，所以睡100毫秒
-                            try {
-                                Thread.sleep(100);
-                            } catch (InterruptedException e) {
-                                e.printStackTrace();
-                            }
                             repository.deleteReminds(checkedRemind);
                         }
                     });

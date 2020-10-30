@@ -17,6 +17,7 @@ import com.example.remind.R;
 import com.example.remind.db.entity.Remind;
 import com.example.remind.utils.DateUtil;
 import com.example.remind.utils.JsonUtil;
+import com.example.remind.utils.StatusBarUtil;
 import com.necer.calendar.BaseCalendar;
 import com.necer.calendar.MonthCalendar;
 import com.necer.enumeration.CheckModel;
@@ -48,6 +49,8 @@ public class SetTimeActivity extends AppCompatActivity implements View.OnClickLi
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        StatusBarUtil.setColor(this, getResources().getColor(R.color.activity_bg));
+
         boolean isDialog = getIntent().getBooleanExtra("isDialog", true);
         if(isDialog) {
             setContentView(R.layout.activity_set_time_dialog);
@@ -142,7 +145,7 @@ public class SetTimeActivity extends AppCompatActivity implements View.OnClickLi
      */
     public void right(View view) {
 
-        String remindJson = "-1";
+        String remindJson = JsonUtil.strRemindToJson("-1");
         Remind remind = new Remind();
 
         boolean isSetting = true;

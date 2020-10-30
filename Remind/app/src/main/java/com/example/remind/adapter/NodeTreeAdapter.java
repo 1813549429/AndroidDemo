@@ -10,12 +10,15 @@ public class NodeTreeAdapter extends BaseNodeAdapter {
 
     public NodeTreeAdapter() {
         super();
+
         addNodeProvider(new FirstProvider());
         addNodeProvider(new SecondProvider());
+
     }
 
     @Override
     protected int getItemType(List<? extends BaseNode> data, int position) {
+
         BaseNode node = data.get(position);
         if (node instanceof FirstNode) {
             return 1;
