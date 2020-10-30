@@ -6,11 +6,13 @@ import android.view.View;
 import android.widget.CheckedTextView;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.chad.library.adapter.base.entity.node.BaseNode;
 import com.chad.library.adapter.base.provider.BaseNodeProvider;
 import com.chad.library.adapter.base.viewholder.BaseViewHolder;
 import com.example.remind.R;
+import com.example.remind.app.AppContext;
 import com.example.remind.db.entity.CheckListEntity;
 import com.example.remind.db.entity.Remind;
 import com.example.remind.ui.MainActivity;
@@ -93,6 +95,13 @@ public class SecondProvider extends BaseNodeProvider {
         }else {
             checkedTextView.setBackgroundResource(R.drawable.item_second_checkbox);
         }
+        checkedTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(AppContext.getContext(), "点击的是CheckBox", Toast.LENGTH_SHORT).show();
+
+            }
+        });
 
     }
 

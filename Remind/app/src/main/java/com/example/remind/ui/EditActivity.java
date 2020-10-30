@@ -1,5 +1,6 @@
 package com.example.remind.ui;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
@@ -20,6 +21,7 @@ import com.example.remind.utils.StatusBarUtil;
 
 public class EditActivity extends AppCompatActivity implements View.OnClickListener {
 
+    private static final int SET_TIME = 0;
     private Remind resultRemind;
     private String[] remindStr;
     private EditText mItemTitle;
@@ -29,6 +31,7 @@ public class EditActivity extends AppCompatActivity implements View.OnClickListe
     private ImageButton ib_clear_time;
     private ImageButton ib_clear_remind;
     private ImageButton ib_clear_repeat;
+    private EditText mEtRemark;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,7 +70,7 @@ public class EditActivity extends AppCompatActivity implements View.OnClickListe
         mTvSetTime = findViewById(R.id.tv_set_time);
         mTvSetRemind = findViewById(R.id.tv_set_remind);
         mTvSetRepeat = findViewById(R.id.tv_set_repeat);
-        EditText mEtRemark = findViewById(R.id.et_remark);
+        mEtRemark = findViewById(R.id.et_remark);
 
         checkBox.setOnClickListener(this);
         mTvSetTime.setOnClickListener(this);
@@ -77,6 +80,14 @@ public class EditActivity extends AppCompatActivity implements View.OnClickListe
         ib_clear_remind.setOnClickListener(this);
         ib_clear_repeat.setOnClickListener(this);
 
+        initComponent();
+
+        leftImage.setBackground(getResources().getDrawable(R.mipmap.close));
+        rightImage.setBackground(getResources().getDrawable(R.mipmap.deletewhite));
+
+    }
+
+    private void initComponent() {
         if (!TextUtils.isEmpty(remindStr[0])) {
             mItemTitle.setText(remindStr[0]);
         }
@@ -101,10 +112,6 @@ public class EditActivity extends AppCompatActivity implements View.OnClickListe
             mEtRemark.setText(remindStr[4]);
             mEtRemark.setTextColor(Color.parseColor("#000000"));
         }
-
-        leftImage.setBackground(getResources().getDrawable(R.mipmap.close));
-        rightImage.setBackground(getResources().getDrawable(R.mipmap.deletewhite));
-
     }
 
     public void left(View view) {
@@ -130,7 +137,7 @@ public class EditActivity extends AppCompatActivity implements View.OnClickListe
                 Intent intent = new Intent(EditActivity.this, SetTimeActivity.class);
                 intent.putExtra("isDialog", false);
                 intent.putExtra("remind", resultRemind);
-                startActivity(intent);
+                startActivityForResult(intent, SET_TIME);
                 break;
             case R.id.ib_clear_time:
                 resultRemind.setSetting(false);
@@ -159,6 +166,21 @@ public class EditActivity extends AppCompatActivity implements View.OnClickListe
                 resultRemind.setComplete(true);
 
                 break;
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if(requestCode == SET_TIME) {
+            if(data != null) {
+                resultRemind = data.getParcelableExtra("remind");
+                remindStr = DateUtil.remindToStr(resultRemind);
+                initComponent();
+
+
+            }
         }
     }
 }

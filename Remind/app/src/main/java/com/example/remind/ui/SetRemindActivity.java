@@ -36,15 +36,30 @@ public class SetRemindActivity extends AppCompatActivity implements View.OnClick
     private void initData() {
         list = new ArrayList<>();
         checkedList = new ArrayList<>();
+
+        //初始化数据
+        String remindStr = getIntent().getStringExtra("remind");
+        if (!TextUtils.isEmpty(remindStr)) {
+            checkedList = strToList(remindStr);
+        }else {
+            checkedList.add(getString(R.string.none));
+        }
+        Boolean isSetRemind = getIntent().getBooleanExtra("isSetRemind", false);
+
+        String initRemindTime = " (9:00AM)";
+        if(isSetRemind) {
+            initRemindTime = "";
+        }
+
         String none = getString(R.string.none);
-        String oneTime = getString(R.string.one_time);
-        String fiveMinsEarly = getString(R.string.five_mins_early);
-        String thirtyMinsEarly = getString(R.string.thirty_mins_early);
-        String oneHourEarly = getString(R.string.one_hour_early);
-        String oneDayEarly = getString(R.string.one_day_early);
-        String twoDayEarly = getString(R.string.two_day_early);
-        String threeDayEarly = getString(R.string.three_day_early);
-        String oneWeekEarly = getString(R.string.one_week_early);
+        String oneTime = getString(R.string.one_time) + initRemindTime;
+        String fiveMinsEarly = getString(R.string.five_mins_early) + initRemindTime;
+        String thirtyMinsEarly = getString(R.string.thirty_mins_early) + initRemindTime;
+        String oneHourEarly = getString(R.string.one_hour_early) + initRemindTime;
+        String oneDayEarly = getString(R.string.one_day_early) + initRemindTime;
+        String twoDayEarly = getString(R.string.two_day_early) + initRemindTime;
+        String threeDayEarly = getString(R.string.three_day_early) + initRemindTime;
+        String oneWeekEarly = getString(R.string.one_week_early) + initRemindTime;
 
         list.add(none);
         list.add(oneTime);
@@ -56,6 +71,9 @@ public class SetRemindActivity extends AppCompatActivity implements View.OnClick
         list.add(threeDayEarly);
         list.add(oneWeekEarly);
 
+
+
+
     }
 
     private void initUI() {
@@ -63,13 +81,6 @@ public class SetRemindActivity extends AppCompatActivity implements View.OnClick
         RecyclerView mRvReminder = findViewById(R.id.rv_reminder);
         mRemindAdapter = new RemindAdapter(getApplicationContext(), list);
 
-        //初始化数据
-        String remindStr = getIntent().getStringExtra("remind");
-        if (!TextUtils.isEmpty(remindStr)) {
-            checkedList = strToList(remindStr);
-        }else {
-            checkedList.add(getString(R.string.none));
-        }
         mRemindAdapter.setCheckedList(checkedList);
 
         mRvReminder.setLayoutManager(new LinearLayoutManager(getApplicationContext()));

@@ -8,10 +8,8 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
-import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.remind.R;
 import com.example.remind.db.entity.Remind;
@@ -45,6 +43,8 @@ public class SetTimeActivity extends AppCompatActivity implements View.OnClickLi
     private ImageButton mIbClearRemind;
     private ImageButton mIbClearRepeat;
     private int[] currentDate = new int[5];
+    private Remind resultRemind;
+    private String[] reminds;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,14 +52,24 @@ public class SetTimeActivity extends AppCompatActivity implements View.OnClickLi
         StatusBarUtil.setColor(this, getResources().getColor(R.color.activity_bg));
 
         boolean isDialog = getIntent().getBooleanExtra("isDialog", true);
+        resultRemind = getIntent().getParcelableExtra("remind");
+
         if(isDialog) {
             setContentView(R.layout.activity_set_time_dialog);
         }else {
             setContentView(R.layout.activity_set_time);
         }
-
+        initData();
         initUI();
 
+    }
+
+    private void initData() {
+        if(resultRemind != null) {
+            reminds = DateUtil.remindToStr(resultRemind);
+        }else {
+            reminds = new String[5];
+        }
     }
 
     private void initUI() {
@@ -67,7 +77,6 @@ public class SetTimeActivity extends AppCompatActivity implements View.OnClickLi
         initSetTime();
         initReminder();
         initRepeat();
-
         ImageButton ib_pre = findViewById(R.id.ib_pre);
         ImageButton ib_next = findViewById(R.id.ib_next);
 
@@ -75,9 +84,17 @@ public class SetTimeActivity extends AppCompatActivity implements View.OnClickLi
         ib_next.setOnClickListener(this);
     }
 
+
     private void initRepeat() {
         mTvSetRepeat = findViewById(R.id.tv_set_repeat);
         mIbClearRepeat = findViewById(R.id.ib_clear_repeat);
+
+        if(!TextUtils.isEmpty(reminds[3])) {
+            repeatData = reminds[3];
+            mTvSetRepeat.setText(repeatData);
+            mTvSetRepeat.setTextColor(Color.parseColor("#000000"));
+            mIbClearRepeat.setVisibility(View.VISIBLE);
+        }
 
         mTvSetRepeat.setOnClickListener(this);
         mIbClearRepeat.setOnClickListener(this);
@@ -87,6 +104,13 @@ public class SetTimeActivity extends AppCompatActivity implements View.OnClickLi
         mTvSetRemind = findViewById(R.id.tv_set_remind);
         mIbClearRemind = findViewById(R.id.ib_clear_remind);
 
+        if (!TextUtils.isEmpty(reminds[2])) {
+            remindData = reminds[2];
+            mTvSetRemind.setText(remindData);
+            mTvSetRemind.setTextColor(Color.parseColor("#000000"));
+            mIbClearRemind.setVisibility(View.VISIBLE);
+        }
+
         mTvSetRemind.setOnClickListener(this);
         mIbClearRemind.setOnClickListener(this);
     }
@@ -94,6 +118,18 @@ public class SetTimeActivity extends AppCompatActivity implements View.OnClickLi
     private void initSetTime() {
         mTvSetTime = findViewById(R.id.tv_set_time);
         mIbTime = findViewById(R.id.ib_clear_time);
+        if (!TextUtils.isEmpty(reminds[1])) {
+            timeData = new String[3];
+
+            String[] hours = reminds[1].split(":");
+            timeData[0] = hours[0];
+            timeData[1] = hours[1].split(" ")[0];
+            timeData[2] = hours[1].split(" ")[1];
+            mTvSetTime.setText(timeData[0] + ":" + timeData[1] + " " + timeData[2]);
+            mTvSetTime.setTextColor(Color.parseColor("#000000"));
+            mIbTime.setVisibility(View.VISIBLE);
+        }
+
 
         mTvSetTime.setOnClickListener(this);
         mIbTime.setOnClickListener(this);
@@ -104,9 +140,15 @@ public class SetTimeActivity extends AppCompatActivity implements View.OnClickLi
         TextView tv_time = findViewById(R.id.tv_time);
         monthCalendar.setCheckMode(CheckModel.SINGLE_DEFAULT_UNCHECKED);
         List<String> list = new ArrayList<>();
+        int[] currentDay;
         //获取当前时间
-        int[] currentDay = DateUtil.getDay(System.currentTimeMillis());
+        if (resultRemind == null) {
+            currentDay = DateUtil.getDay(System.currentTimeMillis());
+        } else {
+            currentDay = DateUtil.getDay(resultRemind.getTime());
+        }
         list.add(currentDay[0] + "-" + currentDay[1] + "-" + currentDay[2]);
+
         monthCalendar.setCheckedDates(list);
         tv_time.setText(DateUtil.numberToMonth(currentDay[1]) + " " + currentDay[0]);
 
@@ -177,7 +219,7 @@ public class SetTimeActivity extends AppCompatActivity implements View.OnClickLi
         remind.setSetting(isSetting);
 
         Intent intent = new Intent();
-        intent.putExtra("setTime", remind);
+        intent.putExtra("remind", remind);
         setResult(RESULT_OK, intent);
         finish();
     }
@@ -229,6 +271,11 @@ public class SetTimeActivity extends AppCompatActivity implements View.OnClickLi
                 Intent intent1 = new Intent(this, SetRemindActivity.class);
                 if(remindData != null) {
                     intent1.putExtra("remind", remindData);
+                }
+                if(timeData != null) {
+                    intent1.putExtra("isSetRemind", true);
+                }else {
+                    intent1.putExtra("isSetRemind", false);
                 }
                 startActivityForResult(intent1,SET_REMIND);
                 overridePendingTransition(0,0);

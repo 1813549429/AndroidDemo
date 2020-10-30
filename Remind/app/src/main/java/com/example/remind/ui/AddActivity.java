@@ -23,6 +23,9 @@ import com.example.remind.db.entity.Remind;
 import com.example.remind.db.repository.MainItemRepository;
 import com.example.remind.utils.AppExecutors;
 
+import java.util.Timer;
+import java.util.TimerTask;
+
 public class AddActivity extends AppCompatActivity implements View.OnClickListener {
 
     private static final int SET_TIME = 0;
@@ -32,6 +35,7 @@ public class AddActivity extends AppCompatActivity implements View.OnClickListen
     private Remind resultRemind;
     private EditText editText;
     private AppExecutors executors = AppContext.executors;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -41,13 +45,14 @@ public class AddActivity extends AppCompatActivity implements View.OnClickListen
 
     }
 
+
     private void initUI() {
         //设置EditText显示
         editText = findViewById(R.id.et_input_name);
         editText.setFocusable(true);
         editText.setFocusableInTouchMode(true);
         editText.requestFocus();
-        //显示软键盘
+//        显示软键盘
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE | WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
 
         TextView tv_set_time = findViewById(R.id.tv_set_time);
@@ -71,7 +76,6 @@ public class AddActivity extends AppCompatActivity implements View.OnClickListen
         resultRemind.setTime(System.currentTimeMillis());
         resultRemind.setSetting(false);
 
-
     }
 
     @Override
@@ -85,7 +89,7 @@ public class AddActivity extends AppCompatActivity implements View.OnClickListen
                 break;
 
             case R.id.ib_add_commit:
-                if(TextUtils.isEmpty(editText.getText().toString())) {
+                if (TextUtils.isEmpty(editText.getText().toString())) {
                     Toast.makeText(getApplicationContext(), "请输入标题", Toast.LENGTH_SHORT).show();
                 } else {
                     resultRemind.setTitle(editText.getText().toString());
@@ -110,10 +114,11 @@ public class AddActivity extends AppCompatActivity implements View.OnClickListen
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode == SET_TIME) {
-            if(data != null) {
-                resultRemind = data.getParcelableExtra("setTime");
+        if (requestCode == SET_TIME) {
+            if (data != null) {
+                resultRemind = data.getParcelableExtra("remind");
             }
         }
     }
+
 }

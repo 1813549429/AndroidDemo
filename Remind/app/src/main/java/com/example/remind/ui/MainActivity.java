@@ -15,11 +15,13 @@ import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.CheckBox;
 import android.widget.CheckedTextView;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.entity.node.BaseNode;
@@ -60,7 +62,7 @@ public class MainActivity extends BaseActivity<MainViewModel, ActivityMainBindin
     public static final int MORE_CLICK = 1;
     public static final int ADD_CLICK = 2;
     private FirstNode firstNodeCompleted;
-    boolean isHide = false;
+    boolean isHide = true;
     private PopupWindow popupWindow;
     private List<BaseNode> secondNodeListOverdue;
     private List<BaseNode> secondNodeListToday;
@@ -87,6 +89,7 @@ public class MainActivity extends BaseActivity<MainViewModel, ActivityMainBindin
     public static final int NEXT_SEVEN_DAYS = 2;
     public static final int NOT_SCHEDULED = 3;
     public static final int COMPLETED = 4;
+    private SecondNode editingNode;
 
     @Override
     protected int getLayoutId() {
@@ -136,7 +139,8 @@ public class MainActivity extends BaseActivity<MainViewModel, ActivityMainBindin
 
         firstNodeList.add(firstNodeOverdue);
         firstNodeList.add(firstNodeToday);
-        firstNodeList.add(firstNodeCompleted);
+        firstNodeList.add(firstNodeNextDays);
+        firstNodeList.add(firstNodeNotScheduled);
     }
 
     private List<FirstNode> addSecondNode(Remind remind) {
@@ -212,7 +216,7 @@ public class MainActivity extends BaseActivity<MainViewModel, ActivityMainBindin
 
 
     private void initMainView() {
-        currentText = getString(R.string.today);
+        currentText = getString(R.string.inbox);
         ImageButton ib_right = findViewById(R.id.ib_right);
         ib_add = findViewById(R.id.ib_main_add);
         mTvTitle = findViewById(R.id.tv_title);
@@ -253,8 +257,9 @@ public class MainActivity extends BaseActivity<MainViewModel, ActivityMainBindin
                 //点击展开，这里使用payload进行增量刷新（避免整个item刷新导致的闪烁，不自然）
                 mAdapter.expandOrCollapse(position, true, true, NodeTreeAdapter.EXPAND_COLLAPSE_PAYLOAD);
                 //同样需要屏蔽一级菜单
-                if(view.findViewById(R.id.item_count) == null) {
-                    Remind remind = ((SecondNode)adapter.getItem(position)).getRemindData();
+                if (view.findViewById(R.id.item_count) == null) {
+                    SecondNode secondNode = ((SecondNode)adapter.getItem(position));
+                    Remind remind = secondNode.getRemindData();
                     if(isLongSelect) {
                         CheckedTextView checkedTextView = view.findViewById(R.id.cb_item_complete);
                         checkedTextView.setChecked(!checkedTextView.isChecked());
@@ -266,7 +271,7 @@ public class MainActivity extends BaseActivity<MainViewModel, ActivityMainBindin
                         mTvTitle.setText(checkedRemindList.size() + " " + getString(R.string.select));
                         mTvTitle.setVisibility(View.VISIBLE);
                     }else {
-
+                        editingNode = secondNode;
                         Intent intent = new Intent(MainActivity.this, EditActivity.class);
                         intent.putExtra("remind", remind);
                         startActivityForResult(intent, EDIT_REMIND);
@@ -392,7 +397,9 @@ public class MainActivity extends BaseActivity<MainViewModel, ActivityMainBindin
         firstNodeList.clear();
         firstNodeList.add(firstNodeOverdue);
         firstNodeList.add(firstNodeToday);
-        firstNodeList.add(firstNodeCompleted);
+        if(!isHide) {
+            firstNodeList.add(firstNodeCompleted);
+        }
         mAdapter.setList(firstNodeList);
     }
 
@@ -401,7 +408,9 @@ public class MainActivity extends BaseActivity<MainViewModel, ActivityMainBindin
         firstNodeList.add(firstNodeOverdue);
         firstNodeList.add(firstNodeToday);
         firstNodeList.add(firstNodeNextDays);
-        firstNodeList.add(firstNodeCompleted);
+        if(!isHide) {
+            firstNodeList.add(firstNodeCompleted);
+        }
         mAdapter.setList(firstNodeList);
     }
 
@@ -411,8 +420,11 @@ public class MainActivity extends BaseActivity<MainViewModel, ActivityMainBindin
         firstNodeList.add(firstNodeToday);
         firstNodeList.add(firstNodeNextDays);
         firstNodeList.add(firstNodeNotScheduled);
-        firstNodeList.add(firstNodeCompleted);
+        if(!isHide) {
+            firstNodeList.add(firstNodeCompleted);
+        }
         mAdapter.setList(firstNodeList);
+
     }
 
     private void hiddenDrawer() {
@@ -482,6 +494,13 @@ public class MainActivity extends BaseActivity<MainViewModel, ActivityMainBindin
                     int index = firstNodeList.indexOf(firstNode);
                     mAdapter.setData(index, firstNode);
                 }
+            }
+        }
+        if (requestCode == EDIT_REMIND) {
+            if (data != null) {
+                //更新数据
+                Remind remind = data.getParcelableExtra("remind");
+
             }
         }
     }

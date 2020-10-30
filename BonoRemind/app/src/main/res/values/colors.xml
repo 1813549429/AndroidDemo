@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#6200EE</color>
+    <color name="colorPrimaryDark">#3700B3</color>
+    <color name="colorAccent">#03DAC5</color>
+    <color name="activity_bg">#2C365A</color>
+    <color name="write">#ffffff</color>
+    <color name="black">#000000</color>
+
+    <!--时间选择器中用到的-->
+    <color name="color_00000000">#00000000</color>
+    <color name="color_ffffff">#ffffff</color>
+    <color name="red">#f23023</color>
+    <color name="color_232326">#232326</color>
+    <color name="color_999999">#999999</color>
+    <color name="color_393b42">#393b42</color>
+    <color name="color_59B29C">#59B29C</color>
+    <color name="color_333333">#333333</color>
+</resources>

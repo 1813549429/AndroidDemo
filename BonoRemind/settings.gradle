@@ -1,0 +1,4 @@
+include ':library'
+include ':ncalendar'
+include ':app'
+rootProject.name = "BonoRemind"
