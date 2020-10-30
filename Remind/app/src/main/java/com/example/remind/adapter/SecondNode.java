@@ -6,7 +6,6 @@ import com.chad.library.adapter.base.entity.node.BaseExpandNode;
 import com.chad.library.adapter.base.entity.node.BaseNode;
 import com.example.remind.db.entity.CheckListEntity;
 import com.example.remind.db.entity.Remind;
-import com.example.remind.enums.MainItemType;
 
 
 import java.util.List;
@@ -27,6 +26,10 @@ public class SecondNode extends BaseExpandNode {
 
     public CheckListEntity getCheckListEntityData() {
         return checkListEntityData;
+    }
+
+    public void setRemindData(Remind remindData) {
+        this.remindData = remindData;
     }
 
     public Remind getRemindData() {

@@ -1,11 +1,17 @@
 package com.example.remind.adapter;
 
+import android.os.Build;
+
+import androidx.annotation.RequiresApi;
+
+import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.entity.node.BaseExpandNode;
 import com.chad.library.adapter.base.entity.node.BaseNode;
-import com.example.remind.enums.MainItemType;
+import com.chad.library.adapter.base.viewholder.BaseViewHolder;
 
 
 import java.util.List;
+import java.util.Objects;
 
 public class FirstNode extends BaseExpandNode {
 
@@ -45,10 +51,18 @@ public class FirstNode extends BaseExpandNode {
     public String getBgColor() {return bgColor;}
 
 
+
     @Override
     public List<BaseNode> getChildNode() {
         return childNode;
     }
+
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+    @Override
+    public boolean equals(Object o) {
+        return o.equals(title);
+    }
+
 
     @Override
     public void setChildNode(List<BaseNode> childNode) {

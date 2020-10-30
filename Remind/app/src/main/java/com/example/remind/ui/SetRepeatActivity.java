@@ -21,6 +21,7 @@ public class SetRepeatActivity extends AppCompatActivity implements View.OnClick
 
     private List<String> list;
     private RepeatAdapter mRepeatAdapter;
+    private String none;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,7 +34,7 @@ public class SetRepeatActivity extends AppCompatActivity implements View.OnClick
 
     private void initData() {
         list = new ArrayList<>();
-        String none = getString(R.string.none);
+        none = getString(R.string.none);
         String daily = getString(R.string.daily);
         String every_weekday = getString(R.string.every_weekday);
         String weekly = getString(R.string.weekly);
@@ -51,7 +52,7 @@ public class SetRepeatActivity extends AppCompatActivity implements View.OnClick
     private void initUI() {
         RecyclerView mRvRepeat = findViewById(R.id.rv_repeat);
         mRepeatAdapter = new RepeatAdapter(getApplicationContext(), list);
-
+        mRepeatAdapter.setCheckedStr(none);
         String repeatStr = getIntent().getStringExtra("repeat");
         if (!TextUtils.isEmpty(repeatStr)) {
            mRepeatAdapter.setCheckedStr(repeatStr);

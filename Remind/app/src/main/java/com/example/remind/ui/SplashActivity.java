@@ -34,6 +34,7 @@ public class SplashActivity extends AppCompatActivity {
 
     private Intent intent;
     private static final String TAG = "SplashActivity";
+    private boolean isFinishing = false;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -47,7 +48,7 @@ public class SplashActivity extends AppCompatActivity {
             public void run() {
                 try {
                     Thread.sleep(4000);
-                    if(!isFinishing()) {
+                    if(!isFinishing) {
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
@@ -112,6 +113,8 @@ public class SplashActivity extends AppCompatActivity {
     }
 
     public void jump(View view) {
+        isFinishing = true;
         startActivity(intent);
+        finish();
     }
 }

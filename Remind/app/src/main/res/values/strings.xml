@@ -56,6 +56,9 @@
     <string name="delete">Delete</string>
     <string name="tomorrow">Tomorrow</string>
     <string name="yesterday">Yesterday</string>
+    <string name="add_note">Add note</string>
+    <string name="input_note">Input your note here...</string>
+    <string name="list_title">List Title</string>
 
 
 </resources>

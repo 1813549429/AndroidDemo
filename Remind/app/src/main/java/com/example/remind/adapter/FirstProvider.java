@@ -40,6 +40,7 @@ public class FirstProvider extends BaseNodeProvider {
 
     @Override
     public void convert(BaseViewHolder helper, BaseNode data, List<?> payloads) {
+        helper.setIsRecyclable(false);
         for (Object payload : payloads) {
             if (payload instanceof Integer && (int) payload == NodeTreeAdapter.EXPAND_COLLAPSE_PAYLOAD) {
                 // 增量刷新，使用动画变化箭头
