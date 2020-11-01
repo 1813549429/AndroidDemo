@@ -46,6 +46,9 @@
             android:theme="@style/Translucent" />
 
         <activity
+            android:name=".EditActivity" />
+
+        <activity
             android:name=".MainActivity"
             android:launchMode="singleTask"/>
     </application>

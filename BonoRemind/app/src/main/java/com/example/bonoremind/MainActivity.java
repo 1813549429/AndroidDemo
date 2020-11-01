@@ -8,12 +8,15 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.media.RingtoneManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.PowerManager;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.CheckedTextView;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
@@ -22,21 +25,28 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.app.NotificationCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.lifecycle.MutableLiveData;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.entity.node.BaseNode;
 import com.chad.library.adapter.base.listener.OnItemClickListener;
+import com.chad.library.adapter.base.listener.OnItemLongClickListener;
 import com.example.bonoremind.adapter.FirstNode;
 import com.example.bonoremind.adapter.NodeTreeAdapter;
 import com.example.bonoremind.adapter.SecondNode;
+import com.example.bonoremind.adapter.SecondProvider;
 import com.example.bonoremind.app.AppContext;
 import com.example.bonoremind.base.BaseActivity;
 import com.example.bonoremind.databinding.ActivityMainBinding;
+import com.example.bonoremind.db.AppDataBase;
 import com.example.bonoremind.db.entity.Remind;
+import com.example.bonoremind.db.repository.MainItemRepository;
 import com.example.bonoremind.utils.DateUtil;
 import com.example.bonoremind.utils.JsonUtil;
 import com.example.bonoremind.view.MyLinearLayoutManager;
@@ -52,6 +62,7 @@ public class MainActivity extends BaseActivity<MainViewModel, ActivityMainBindin
     public static final int ADD_CLICK = 0;
     public static final int NAV_CLICK = 1;
     public static final int MORE_CLICK = 2;
+    private static final int EDIT_REMIND = 6;
     private static final int NOTIFICATION = 5;
     private DrawerLayout mDrawerLayout;
     private NavigationView mNavigation;
@@ -63,6 +74,8 @@ public class MainActivity extends BaseActivity<MainViewModel, ActivityMainBindin
     public static final int NEXT_SEVEN_DAYS = 2;
     public static final int NOT_SCHEDULED = 3;
     public static final int COMPLETED = 4;
+    public static final int DELETE = 7;
+    public static final int SELECT_ALL = 8;
 
     private List<Remind> remindList;
     long recentlyMinutes = Long.MAX_VALUE;
@@ -82,6 +95,15 @@ public class MainActivity extends BaseActivity<MainViewModel, ActivityMainBindin
     boolean isHide = true;
     private ImageButton mIbMore;
     private TextView headerTextView;
+    private TextView mTvTitle;
+    private ConstraintLayout long_select;
+    private boolean isLongSelect = false;
+    private List<Remind> checkedRemindList = new ArrayList<>();
+    private SecondNode editingNode;
+    private ImageButton mIbLeft;
+    private ImageButton mIbAdd;
+    private MainItemRepository repository;
+    private String currentText;
 
     @Override
     protected int getLayoutId() {
@@ -103,6 +125,10 @@ public class MainActivity extends BaseActivity<MainViewModel, ActivityMainBindin
     }
 
     private void initMainData() {
+
+        repository = MainItemRepository.getInstance(AppDataBase.getInstance(getApplicationContext()));
+
+
         //拿到所有数据
         remindList = getIntent().getParcelableArrayListExtra("allData");
 
@@ -403,7 +429,7 @@ public class MainActivity extends BaseActivity<MainViewModel, ActivityMainBindin
     }
 
     private boolean isNotScheduledData(Remind remind)  {
-        if(TextUtils.isEmpty(remind.getAdvance())) {
+        if(TextUtils.isEmpty(remind.getAdvance()) || remind.getAdvance().contains("-1")) {
             return true;
         }
         return false;
@@ -412,7 +438,7 @@ public class MainActivity extends BaseActivity<MainViewModel, ActivityMainBindin
     private boolean isNextDaysData(Remind remind)  {
         int currentDay = DateUtil.getYearMonthDay(System.currentTimeMillis());
         int remindDay = DateUtil.getYearMonthDay(remind.getTime());
-        if(remindDay - currentDay > 0 && remindDay-currentDay <= 7 && remind.isSetting()) {
+        if(remindDay - currentDay > 0 && remindDay-currentDay <= 7 && !isNotScheduledData(remind)) {
             return true;
         }
         return false;
@@ -421,14 +447,14 @@ public class MainActivity extends BaseActivity<MainViewModel, ActivityMainBindin
     private boolean isTodayData(Remind remind)  {
         int currentDay = DateUtil.getYearMonthDay(System.currentTimeMillis());
         int remindDay = DateUtil.getYearMonthDay(remind.getTime());
-        if(currentDay == remindDay && remind.isSetting()) {
+        if(currentDay == remindDay && !isNotScheduledData(remind)) {
             return true;
         }
         return false;
     }
 
     private boolean isOverdueData(Remind remind)  {
-        if(remind.getTime() < System.currentTimeMillis() && !remind.isComplete() && remind.isSetting()) {
+        if(remind.getTime() < System.currentTimeMillis() && !remind.isComplete() && !isNotScheduledData(remind)) {
             return true;
         }
         return false;
@@ -441,7 +467,14 @@ public class MainActivity extends BaseActivity<MainViewModel, ActivityMainBindin
         mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
         initNavigation();
 
+        currentText = getString(R.string.inbox);
+
+        mIbAdd = findViewById(R.id.ib_main_add);
+        mTvTitle = findViewById(R.id.tv_title);
+        mIbLeft = findViewById(R.id.ib_left);
         mIbMore = findViewById(R.id.ib_right);
+        long_select = findViewById(R.id.long_select);
+
         //RecycleView
         mRvMain = findViewById(R.id.rv_main);
         mRvMain.setLayoutManager(new MyLinearLayoutManager(this));
@@ -456,6 +489,30 @@ public class MainActivity extends BaseActivity<MainViewModel, ActivityMainBindin
 
         setAdapterClickEvent();
 
+        mRvMain.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+                RecyclerView.LayoutManager layoutManager = recyclerView.getLayoutManager();
+                if (layoutManager instanceof LinearLayoutManager) {
+                    LinearLayoutManager linearLayoutManager = (LinearLayoutManager) layoutManager;
+                    //获取第一个可见view的位置
+                    int firstItemPosition = linearLayoutManager.findFirstVisibleItemPosition();
+
+                    if (firstItemPosition == 0) {
+                        mTvTitle.setVisibility(View.GONE);
+                    } else {
+                        mTvTitle.setVisibility(View.VISIBLE);
+                    }
+                }
+            }
+            @Override
+            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+            }
+        });
+
+
     }
 
 
@@ -464,13 +521,54 @@ public class MainActivity extends BaseActivity<MainViewModel, ActivityMainBindin
             @Override
             public void onItemClick(@NonNull BaseQuickAdapter<?, ?> adapter, @NonNull View view, int position) {
                 //点击展开，这里使用payload进行增量刷新（避免整个item刷新导致的闪烁，不自然）
+//                mRvMain.getRecycledViewPool().clear();
                 mAdapter.expandOrCollapse(position, true, true, NodeTreeAdapter.EXPAND_COLLAPSE_PAYLOAD);
                 //同样需要屏蔽一级菜单
                 if (view.findViewById(R.id.item_count) == null) {
-
-                } else {
-
+                    SecondNode secondNode = ((SecondNode)adapter.getItem(position));
+                    Remind remind = secondNode.getRemindData();
+                    if(isLongSelect) {
+                        CheckedTextView checkedTextView = view.findViewById(R.id.cb_item_complete);
+                        checkedTextView.setChecked(!checkedTextView.isChecked());
+                        if(checkedTextView.isChecked()) {
+                            checkedRemindList.add(remind);
+                        }else {
+                            checkedRemindList.remove(remind);
+                        }
+                        mTvTitle.setText(checkedRemindList.size() + " " + getString(R.string.select));
+                        mTvTitle.setVisibility(View.VISIBLE);
+                    } else {
+                        editingNode = secondNode;
+                        Intent intent = new Intent(MainActivity.this, EditActivity.class);
+                        intent.putExtra("remind", remind);
+                        startActivityForResult(intent, EDIT_REMIND);
+                    }
                 }
+            }
+        });
+
+        mAdapter.setOnItemLongClickListener(new OnItemLongClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+            @Override
+            public boolean onItemLongClick(@NonNull BaseQuickAdapter adapter, @NonNull View view, int position) {
+                //是否是一级菜单，如果是就不用管了
+                if(view.findViewById(R.id.item_count) == null) {
+                    long_select.setVisibility(View.VISIBLE);
+                    CheckedTextView checkedTextView = view.findViewById(R.id.cb_item_complete);
+                    checkedTextView.setChecked(!checkedTextView.isChecked());
+                    isLongSelect = true;
+                    if(checkedTextView.isChecked()) {
+                        checkedRemindList.add(((SecondNode)adapter.getItem(position)).getRemindData());
+                    }else {
+                        checkedRemindList.remove(((SecondNode)adapter.getItem(position)).getRemindData());
+                    }
+                    mIbAdd.setVisibility(View.GONE);
+                    mIbLeft.setImageDrawable(getResources().getDrawable(R.mipmap.close));
+                    mTvTitle.setText(checkedRemindList.size() + " " + getString(R.string.select));
+                    mTvTitle.setVisibility(View.VISIBLE);
+                }
+
+                return true;
             }
         });
     }
@@ -512,6 +610,7 @@ public class MainActivity extends BaseActivity<MainViewModel, ActivityMainBindin
 
     //切换到Next Seven Days下
     private void changeNextSevenDaysView() {
+        currentText = getString(R.string.next_seven_days);
         mTitleLiveData.setValue(getString(R.string.next_seven_days));
         reloadNextSevenDays();
         headerTextView.setText(getString(R.string.next_seven_days));
@@ -519,6 +618,7 @@ public class MainActivity extends BaseActivity<MainViewModel, ActivityMainBindin
 
     //切换到Today下
     private void changeTodayView() {
+        currentText = getString(R.string.today);
         mTitleLiveData.setValue(getString(R.string.today));
         reloadToday();
         headerTextView.setText(getString(R.string.today));
@@ -527,6 +627,7 @@ public class MainActivity extends BaseActivity<MainViewModel, ActivityMainBindin
 
     //切换到Inbox下
     private void changeInboxView() {
+        currentText = getString(R.string.inbox);
         mTitleLiveData.setValue(getString(R.string.inbox));
         reloadInbox();
         headerTextView.setText(getString(R.string.inbox));
@@ -555,8 +656,11 @@ public class MainActivity extends BaseActivity<MainViewModel, ActivityMainBindin
 
         switch (mode) {
             case NAV_CLICK:
-
-                mDrawerLayout.openDrawer(mNavigation);
+                if (isLongSelect) {
+                    exitLongClick();
+                }else {
+                    mDrawerLayout.openDrawer(mNavigation);
+                }
 
                 break;
             case ADD_CLICK:
@@ -594,6 +698,43 @@ public class MainActivity extends BaseActivity<MainViewModel, ActivityMainBindin
                     }
                 });
 
+                break;
+
+            case SELECT_ALL:
+                SecondProvider.isSelectAll = !SecondProvider.isSelectAll;
+                mAdapter.setList(firstNodeList);
+                if(SecondProvider.isSelectAll) {
+                    checkedRemindList.clear();
+                    for (BaseNode node : firstNodeList) {
+                        FirstNode firstNode = (FirstNode) node;
+                        List<BaseNode> secondNodeList = firstNode.getChildNode();
+                        for (BaseNode baseNode : secondNodeList) {
+                            SecondNode secondNode = (SecondNode) baseNode;
+                            checkedRemindList.add(secondNode.getRemindData());
+                        }
+                    }
+                }else {
+                    checkedRemindList.clear();
+                }
+
+                mTvTitle.setText(checkedRemindList.size() + " " + getString(R.string.select));
+                break;
+
+            case DELETE:
+                for (Remind checkedRemind : checkedRemindList) {
+                    if (remindList.contains(checkedRemind)) {
+                        remindList.remove(checkedRemind);
+                    }
+                    AppContext.executors.diskIO().execute(new Runnable() {
+                        @Override
+                        public void run() {
+                            repository.deleteReminds(checkedRemind);
+                        }
+                    });
+                    SecondNode secondNode = new SecondNode(checkedRemind, null);
+                    mAdapter.remove(secondNode);
+                }
+                exitLongClick();
                 break;
         }
     }
@@ -636,6 +777,35 @@ public class MainActivity extends BaseActivity<MainViewModel, ActivityMainBindin
 
                 mAdapter.setList(firstNodeList);
             }
+        } else if (requestCode == EDIT_REMIND) {
+            if (data != null) {
+                //更新数据
+                Remind remind = data.getParcelableExtra("remind");
+                
+
+            }
         }
     }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if(isLongSelect) {
+            exitLongClick();
+            return false;
+        }
+        return super.onKeyDown(keyCode, event);
+    }
+
+    private void exitLongClick() {
+        isLongSelect = false;
+        mIbAdd.setVisibility(View.VISIBLE);
+        long_select.setVisibility(View.INVISIBLE);
+        SecondProvider.isSelectAll = false;
+        mAdapter.setList(firstNodeList);
+        checkedRemindList.clear();
+        mIbLeft.setImageDrawable(getResources().getDrawable(R.mipmap.sidebar));
+        mTvTitle.setText(currentText);
+        mTvTitle.setVisibility(View.INVISIBLE);
+    }
+
 }

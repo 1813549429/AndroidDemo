@@ -16,7 +16,7 @@
         app:layout_constraintLeft_toLeftOf="parent">
 
         <ImageButton
-            android:id="@+id/ib_cancel"
+            android:id="@+id/ib_left"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:onClick="left"
@@ -36,11 +36,11 @@
             app:layout_constraintTop_toTopOf="parent"
             android:layout_marginLeft="17dp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintLeft_toRightOf="@id/ib_cancel"
+            app:layout_constraintLeft_toRightOf="@id/ib_left"
             android:textColor="@color/write"/>
 
         <ImageButton
-            android:id="@+id/ib_delete"
+            android:id="@+id/ib_right"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:onClick="right"
