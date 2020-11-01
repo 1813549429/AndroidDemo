@@ -18,7 +18,11 @@ public class ExampleUnitTest {
     @Test
     public void addition_isCorrect() {
         assertEquals(4, 2 + 2);
-        String s = "sada";
-        System.out.println(s.split(",")[0]);
+        List<String> s1 = new ArrayList<>();
+        s1.add("23424");
+        List<List<String>> list = new ArrayList<>();
+        list.add(s1);
+        System.out.println(list.get(0).get(0));
+
     }
 }

@@ -27,7 +27,9 @@ public abstract class BaseActivity<VM extends ViewModel, DB extends ViewDataBind
         bindingView = DataBindingUtil.setContentView(this, getLayoutId());
         bindingView.setLifecycleOwner(this);
 
-        getSupportActionBar().hide();
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().hide();
+        }
 
         StatusBarUtil.setColor(this, getResources().getColor(R.color.activity_bg));
 

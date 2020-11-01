@@ -41,6 +41,8 @@ public class Remind implements Parcelable {
      */
     @NonNull
     private long time;
+    @NonNull
+    private boolean isSetting;
     /**
      * 任务的重复类型
      * 0代表不重复；
@@ -106,6 +108,7 @@ public class Remind implements Parcelable {
         repeatInterval = in.readInt();
         repeatValue = in.readString();
         isComplete = in.readByte() != 0;
+        isSetting = in.readByte() != 0;
         advance = in.readString();
         subTasks = in.readString();
         iconId = in.readInt();
@@ -205,7 +208,14 @@ public class Remind implements Parcelable {
         this.subTasks = subTasks;
     }
 
-//    public int getCheckListId() {
+    public boolean isSetting() {
+        return isSetting;
+    }
+
+    public void setSetting(boolean setting) {
+        isSetting = setting;
+    }
+    //    public int getCheckListId() {
 //        return checkListId;
 //    }
 //
@@ -285,6 +295,7 @@ public class Remind implements Parcelable {
         dest.writeInt(repeatInterval);
         dest.writeString(repeatValue);
         dest.writeByte((byte) (isComplete ? 1 : 0));
+        dest.writeByte((byte) (isSetting ? 1 : 0));
         dest.writeString(advance);
         dest.writeString(subTasks);
         dest.writeInt(iconId);

@@ -70,6 +70,7 @@
             android:textColor="@color/black"
             android:text="@{vm.monthTextLiveData}"
             android:layout_marginTop="33dp"
+            android:layout_marginLeft="20dp"
             app:layout_constraintTop_toBottomOf="@id/actionbar"
             app:layout_constraintLeft_toLeftOf="parent"/>
 
@@ -81,8 +82,10 @@
             app:layout_constraintTop_toTopOf="@id/tv_time"
             app:layout_constraintBottom_toBottomOf="@id/tv_time"
             app:layout_constraintRight_toLeftOf="@id/ib_next"
-            android:layout_marginRight="25dp"
-            android:background="@mipmap/previous"/>
+            android:paddingRight="12dp"
+            android:paddingLeft="12dp"
+            android:background="@color/write"
+            android:src="@mipmap/previous"/>
 
         <ImageButton
             android:id="@+id/ib_next"
@@ -92,8 +95,10 @@
             app:layout_constraintTop_toTopOf="@id/tv_time"
             app:layout_constraintBottom_toBottomOf="@id/tv_time"
             app:layout_constraintRight_toRightOf="parent"
-            android:layout_marginRight="20dp"
-            android:background="@mipmap/next"/>
+            android:paddingRight="12dp"
+            android:paddingLeft="12dp"
+            android:background="@color/write"
+            android:src="@mipmap/next"/>
 
         <com.necer.view.WeekBar
             android:id="@+id/weekBar"
@@ -161,7 +166,7 @@
             android:layout_width="match_parent"
             android:layout_height="24dp"
             android:layout_marginTop="25dp"
-            android:text="@{vm.timeTextLiveData}"
+            android:text="@{vm.remindTextLiveData}"
             android:onClick="@{() -> holder.click(holder.SET_REMINDER)}"
             android:maxWidth="200dp"
             android:maxLines="1"
@@ -191,7 +196,7 @@
             android:layout_width="match_parent"
             android:layout_height="24dp"
             android:layout_marginTop="25dp"
-            android:text="@{vm.timeTextLiveData}"
+            android:text="@{vm.repeatTextLiveData}"
             android:onClick="@{() -> holder.click(holder.SET_REPEAT)}"
             android:maxWidth="200dp"
             android:maxLines="1"

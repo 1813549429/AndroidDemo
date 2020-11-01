@@ -2,11 +2,11 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "69df2cafa927668d36126de5d9f5c1da",
+    "identityHash": "5e44a030aa83b30671c7e24197611196",
     "entities": [
       {
         "tableName": "remind",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `title` TEXT, `remark` TEXT, `time` INTEGER NOT NULL, `repeatType` INTEGER NOT NULL, `repeatInterval` INTEGER NOT NULL, `repeatValue` TEXT, `isComplete` INTEGER NOT NULL, `advance` TEXT, `subTasks` TEXT, `iconId` INTEGER NOT NULL, `checkListId` INTEGER NOT NULL, FOREIGN KEY(`checkListId`) REFERENCES `checkList`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `title` TEXT, `remark` TEXT, `time` INTEGER NOT NULL, `repeatType` INTEGER NOT NULL, `repeatInterval` INTEGER NOT NULL, `repeatValue` TEXT, `isComplete` INTEGER NOT NULL, `isSetting` INTEGER NOT NULL, `advance` TEXT, `subTasks` TEXT, `iconId` INTEGER NOT NULL)",
         "fields": [
           {
             "fieldPath": "id",
@@ -57,6 +57,12 @@
             "notNull": true
           },
           {
+            "fieldPath": "isSetting",
+            "columnName": "isSetting",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
             "fieldPath": "advance",
             "columnName": "advance",
             "affinity": "TEXT",
@@ -73,12 +79,6 @@
             "columnName": "iconId",
             "affinity": "INTEGER",
             "notNull": true
-          },
-          {
-            "fieldPath": "checkListId",
-            "columnName": "checkListId",
-            "affinity": "INTEGER",
-            "notNull": true
           }
         ],
         "primaryKey": {
@@ -87,29 +87,8 @@
           ],
           "autoGenerate": true
         },
-        "indices": [
-          {
-            "name": "index_remind_checkListId",
-            "unique": false,
-            "columnNames": [
-              "checkListId"
-            ],
-            "createSql": "CREATE INDEX IF NOT EXISTS `index_remind_checkListId` ON `${TABLE_NAME}` (`checkListId`)"
-          }
-        ],
-        "foreignKeys": [
-          {
-            "table": "checkList",
-            "onDelete": "CASCADE",
-            "onUpdate": "NO ACTION",
-            "columns": [
-              "checkListId"
-            ],
-            "referencedColumns": [
-              "id"
-            ]
-          }
-        ]
+        "indices": [],
+        "foreignKeys": []
       },
       {
         "tableName": "checkList",
@@ -147,7 +126,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '69df2cafa927668d36126de5d9f5c1da')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '5e44a030aa83b30671c7e24197611196')"
     ]
   }
 }

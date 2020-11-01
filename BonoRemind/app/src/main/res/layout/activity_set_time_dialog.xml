@@ -7,7 +7,7 @@
 
         <variable
             name="holder"
-            type="com.example.bonoremind.SetTimeActivity" />
+            type="com.example.bonoremind.SetTimeDialogActivity" />
 
         <variable
             name="vm"
@@ -58,8 +58,10 @@
                     app:layout_constraintTop_toTopOf="@id/tv_time"
                     app:layout_constraintBottom_toBottomOf="@id/tv_time"
                     app:layout_constraintRight_toLeftOf="@id/ib_next"
-                    android:layout_marginRight="18dp"
-                    android:background="@mipmap/previous"/>
+                    android:paddingRight="9dp"
+                    android:paddingLeft="9dp"
+                    android:background="@color/write"
+                    android:src="@mipmap/previous"/>
 
                 <ImageButton
                     android:id="@+id/ib_next"
@@ -69,7 +71,10 @@
                     app:layout_constraintTop_toTopOf="@id/tv_time"
                     app:layout_constraintBottom_toBottomOf="@id/tv_time"
                     app:layout_constraintRight_toRightOf="parent"
-                    android:background="@mipmap/next"/>
+                    android:paddingLeft="9dp"
+                    android:paddingRight="9dp"
+                    android:background="@color/write"
+                    android:src="@mipmap/next"/>
 
                 <com.necer.view.WeekBar
                     android:id="@+id/weekBar"
@@ -137,8 +142,9 @@
                     android:layout_height="24dp"
                     android:fontFamily="@font/inter_regular"
                     android:layout_marginTop="16dp"
-                    android:text="@{vm.timeTextLiveData}"
-                    android:onClick="@{() -> holder.click(holder.SET_REMINDER)}"                    android:maxWidth="200dp"
+                    android:text="@{vm.remindTextLiveData}"
+                    android:onClick="@{() -> holder.click(holder.SET_REMINDER)}"
+                    android:maxWidth="200dp"
                     android:maxLines="1"
                     android:ellipsize="end"
                     android:drawableLeft="@mipmap/reminder"
@@ -166,7 +172,7 @@
                     android:layout_height="24dp"
                     android:layout_marginTop="16dp"
                     android:fontFamily="@font/inter_regular"
-                    android:text="@{vm.timeTextLiveData}"
+                    android:text="@{vm.repeatTextLiveData}"
                     android:onClick="@{() -> holder.click(holder.SET_REPEAT)}"                    android:maxWidth="200dp"
                     android:maxLines="1"
                     android:ellipsize="end"
@@ -210,7 +216,7 @@
                 android:layout_height="wrap_content"
                 android:text="@string/save"
                 android:textSize="16sp"
-                android:onClick="@{() -> holder.click(holder.CANCEL)}"
+                android:onClick="@{() -> holder.click(holder.SAVE)}"
                 android:fontFamily="@font/inter_bold"
                 android:layout_marginTop="20dp"
                 android:textColor="#4EB9C4"

@@ -16,7 +16,6 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
 
 import com.example.bonoremind.base.BaseActivity;
-import com.example.bonoremind.databinding.ActivitySetTimeBinding;
 import com.example.bonoremind.databinding.ActivitySetTimeDialogBinding;
 import com.example.bonoremind.db.entity.Remind;
 import com.example.bonoremind.utils.DateUtil;
@@ -33,7 +32,7 @@ import org.joda.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SetTimeActivity extends BaseActivity<SetTimeViewModel, ActivitySetTimeBinding> {
+public class SetTimeDialogActivity extends BaseActivity<SetTimeViewModel, ActivitySetTimeDialogBinding> {
 
 
     public static final int SET_HOUR = 0;
@@ -74,7 +73,7 @@ public class SetTimeActivity extends BaseActivity<SetTimeViewModel, ActivitySetT
     @Override
     protected int getLayoutId() {
         boolean isDialog = getIntent().getBooleanExtra("isDialog", false);
-        return R.layout.activity_set_time;
+        return R.layout.activity_set_time_dialog;
     }
 
     @Override
@@ -211,20 +210,20 @@ public class SetTimeActivity extends BaseActivity<SetTimeViewModel, ActivitySetT
         switch (mode) {
             case SET_HOUR:
                 //跳转到SetHourActivity
-                Intent timeIntent = new Intent(SetTimeActivity.this, SetHourActivity.class);
+                Intent timeIntent = new Intent(SetTimeDialogActivity.this, SetHourActivity.class);
                 timeIntent.putExtra("hours", remindTime);
                 startActivityForResult(timeIntent, SET_HOUR);
                 overridePendingTransition(0,0);
                 break;
             case SET_REMINDER:
                 //跳转到SetRemindActivity
-                Intent remindIntent = new Intent(SetTimeActivity.this, SetRemindActivity.class);
+                Intent remindIntent = new Intent(SetTimeDialogActivity.this, SetRemindActivity.class);
                 remindIntent.putExtra("remind", resultRemind);
                 startActivityForResult(remindIntent, SET_REMINDER);
                 overridePendingTransition(0,0);
                 break;
             case SET_REPEAT:
-                Intent repeatIntent = new Intent(SetTimeActivity.this, SetRepeatActivity.class);
+                Intent repeatIntent = new Intent(SetTimeDialogActivity.this, SetRepeatActivity.class);
                 repeatIntent.putExtra("remind", resultRemind);
                 startActivityForResult(repeatIntent, SET_REPEAT);
                 overridePendingTransition(0,0);

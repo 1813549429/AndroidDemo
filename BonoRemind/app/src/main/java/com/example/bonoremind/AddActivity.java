@@ -3,7 +3,9 @@ package com.example.bonoremind;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -84,6 +86,13 @@ public class AddActivity extends BaseActivity<AddViewModel, ActivityAddBinding> 
         mEtName = findViewById(R.id.et_input_name);
         mTvSetTime = findViewById(R.id.tv_set_time);
         mClAddData = findViewById(R.id.cl_add_data);
+        //设置EditText显示
+        mEtName.setFocusable(true);
+        mEtName.setFocusableInTouchMode(true);
+        mEtName.requestFocus();
+//        显示软键盘
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE | WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
+
 
     }
 
@@ -94,6 +103,7 @@ public class AddActivity extends BaseActivity<AddViewModel, ActivityAddBinding> 
         resultRemind.setTitle("");
         resultRemind.setAdvance("");
         resultRemind.setComplete(false);
+        resultRemind.setSetting(false);
         resultRemind.setRemark("");
         resultRemind.setRepeatInterval(0);
         resultRemind.setRepeatType(0);
@@ -107,7 +117,7 @@ public class AddActivity extends BaseActivity<AddViewModel, ActivityAddBinding> 
         //无论是点击哪个都应该保存title的状态
         resultRemind.setTitle(mEtName.getText().toString());
         //重复点击的容错处理
-        if (System.currentTimeMillis() - preClickTime < 300) {
+        if (System.currentTimeMillis() - preClickTime < 600) {
             return;
         }
         preClickTime = System.currentTimeMillis();
@@ -115,15 +125,16 @@ public class AddActivity extends BaseActivity<AddViewModel, ActivityAddBinding> 
         switch (mode) {
             case SET_TIME:
                 //跳转到SetTimeActivity设置数据
-                Intent activityIntent = new Intent(this, SetTimeActivity.class);
+                Intent activityIntent = new Intent(this, SetTimeDialogActivity.class);
                 activityIntent.putExtra("remind", resultRemind);
                 activityIntent.putExtra("isDialog", true);
                 startActivityForResult(activityIntent, SET_TIME);
-
+                overridePendingTransition(0,0);
                 break;
             case SAVE:
                 if(TextUtils.isEmpty(mEtName.getText().toString())) {
                     Toast.makeText(getApplicationContext(), "请输入任务标题", Toast.LENGTH_SHORT).show();
+                    return;
                 }
                 //保存到数据库
                 AppContext.executors.diskIO().execute(new Runnable() {
@@ -148,6 +159,7 @@ public class AddActivity extends BaseActivity<AddViewModel, ActivityAddBinding> 
             if (data != null) {
                 //Set time之后返回的数据
                 resultRemind = data.getParcelableExtra("remind");
+                Log.d("AddActivity", "有返回值");
                 remindLiveData.setValue(resultRemind);
             }
         }

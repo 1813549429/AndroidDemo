@@ -18,7 +18,6 @@ public class SetTimeViewModel extends ViewModel {
     public SetTimeViewModel() {
         super();
         Context context = AppContext.getContext();
-        timeTextLiveData.setValue(context.getString(R.string.no_time));
         remindTextLiveData.setValue(context.getString(R.string.no_reminder));
         repeatTextLiveData.setValue(context.getString(R.string.no_repeat));
     }

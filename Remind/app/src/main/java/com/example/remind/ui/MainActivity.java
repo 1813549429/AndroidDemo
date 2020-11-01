@@ -158,7 +158,8 @@ public class MainActivity extends BaseActivity<MainViewModel, ActivityMainBindin
         }
 
         if(isOverdueData(remind)) {
-            secondNodeListOverdue.add(secondNode);
+            SecondNode secondNode1 = new SecondNode(remind, null);
+            secondNodeListOverdue.add(secondNode1);
             addNode.add(firstNodeOverdue);
         }
 
@@ -492,7 +493,9 @@ public class MainActivity extends BaseActivity<MainViewModel, ActivityMainBindin
                 for (FirstNode firstNode :
                         firstNodeListData) {
                     int index = firstNodeList.indexOf(firstNode);
+
                     mAdapter.setData(index, firstNode);
+                    mRvMain.invalidate();
                 }
             }
         }

@@ -2,6 +2,7 @@ package com.example.bonoremind.utils;
 
 import android.content.Context;
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.example.bonoremind.R;
 import com.example.bonoremind.app.AppContext;
@@ -115,8 +116,8 @@ public class DateUtil {
     }
 
     public static long intArrayToLong(int[] date) {
-        String dateStr = date[0] + "-" + date[1] + "-" +
-                date[2] + "-" + date[3] + "-" + date[4];
+        String dateStr = date[0] + "-" + formatTimeUnit(date[1]) + "-" +
+                formatTimeUnit(date[2]) + "-" + formatTimeUnit(date[3]) + "-" + formatTimeUnit(date[4]);
         return strToLong(dateStr, "yyyy-MM-dd-HH-mm");
     }
 
@@ -176,13 +177,32 @@ public class DateUtil {
      * @param time
      * @return
      */
-    public static String timeToStr(Long time) {
+    public static String timeToStr(long time) {
         int[] days = getDay(time);
         if(days[3] >= 12) {
             return days[3]-12 + ":" + days[4] + " PM";
         }else {
             return days[3] + ":" + days[4] + " AM";
         }
+    }
+
+    /**
+     * 将 11:15 PM  这种形式的字符串转化成 int数组 {23,15}这种形式
+     * @param time
+     * @return
+     */
+    public static int[]  strToTime(String time) {
+        int[] resultInt = new int[2];
+        Log.d("DateUtil", time);
+        String[] ss1 = time.split(":");
+        //如果此时是上午9点，可视为没设置
+        String[] ss2 = ss1[1].split(" ");
+        resultInt[0] = Integer.parseInt(ss1[0]);
+        resultInt[1] = Integer.parseInt(ss2[0]);
+        if (ss2[1].equals(AppContext.getContext().getString(R.string.pm))) {
+            resultInt[0] += 12;
+        }
+        return resultInt;
     }
 
 
@@ -222,6 +242,9 @@ public class DateUtil {
      * @return
      */
     public static String advanceJsonToStr(Context context, String advanceJson) {
+        if (TextUtils.isEmpty(advanceJson)) {
+            return "";
+        }
         List<String> advanceList = JsonUtil.jsonToStrList(advanceJson);
         StringBuilder builder = new StringBuilder();
         for (String advanceTime : advanceList) {
@@ -256,8 +279,15 @@ public class DateUtil {
      */
     public static long currentToNine(long currentTime) {
         int[] days = getDay(currentTime);
-        String nineTime = days[0] + "-" + days[1] + "-" + days[2] + "-" + "09" + "-" + "00";
+        String nineTime = days[0] + "-" + formatTimeUnit(days[1]) + "-" + formatTimeUnit(days[2]) + "-" + "09" + "-" + "00";
         return strToLong(nineTime, "yyyy-MM-dd-HH-mm");
+    }
+
+    /**
+     * 将“0-9”转换为“00-09”
+     */
+    public static String formatTimeUnit(int unit) {
+        return unit < 10 ? "0" + String.valueOf(unit) : String.valueOf(unit);
     }
 
 }

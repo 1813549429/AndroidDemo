@@ -6,6 +6,7 @@
     <color name="activity_bg">#2C365A</color>
     <color name="write">#ffffff</color>
     <color name="black">#000000</color>
+    <color name="translucent">#20000000</color>
 
     <!--时间选择器中用到的-->
     <color name="color_00000000">#00000000</color>

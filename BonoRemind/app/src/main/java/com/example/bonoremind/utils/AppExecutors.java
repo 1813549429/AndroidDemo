@@ -7,6 +7,7 @@ import androidx.annotation.NonNull;
 
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
 
 /**
  * 全局线程池
@@ -17,17 +18,20 @@ public class AppExecutors {
 
     private final Executor mNetworkIO;
 
+    private final ScheduledExecutorService mScheduleIO;
+
     private final Executor mMainThread;
 
-    private AppExecutors(Executor diskIO, Executor networkIO, Executor mainThread) {
+    private AppExecutors(Executor diskIO, Executor networkIO, Executor mainThread, ScheduledExecutorService scheduleThread) {
         this.mDiskIO = diskIO;
         this.mNetworkIO = networkIO;
         this.mMainThread = mainThread;
+        this.mScheduleIO = scheduleThread;
     }
 
     public AppExecutors() {
         this(Executors.newCachedThreadPool(), Executors.newFixedThreadPool(3),
-                new MainThreadExecutor());
+                new MainThreadExecutor(), Executors.newScheduledThreadPool(3));
     }
 
     public Executor diskIO() {
@@ -41,6 +45,12 @@ public class AppExecutors {
     public Executor mainThread() {
         return mMainThread;
     }
+
+    public ScheduledExecutorService scheduleIO() {
+        return mScheduleIO;
+    }
+
+
 
     private static class MainThreadExecutor implements Executor {
         private Handler mainThreadHandler = new Handler(Looper.getMainLooper());
