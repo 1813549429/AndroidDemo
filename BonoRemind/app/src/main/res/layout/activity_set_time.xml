@@ -6,11 +6,11 @@
 
         <variable
             name="holder"
-            type="com.example.bonoremind.SetTimeActivity" />
+            type="com.bonoreminder.app.SetTimeActivity" />
 
         <variable
             name="vm"
-            type="com.example.bonoremind.vm.SetTimeViewModel" />
+            type="com.bonoreminder.app.vm.SetTimeViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

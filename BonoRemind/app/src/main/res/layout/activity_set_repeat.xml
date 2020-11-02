@@ -6,11 +6,11 @@
 
         <variable
             name="holder"
-            type="com.example.bonoremind.SetRepeatActivity" />
+            type="com.bonoreminder.app.SetRepeatActivity" />
 
         <variable
             name="vm"
-            type="com.example.bonoremind.vm.SetRepeatViewModel" />
+            type="com.bonoreminder.app.vm.SetRepeatViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

@@ -7,11 +7,11 @@
 
         <variable
             name="holder"
-            type="com.example.bonoremind.MainActivity" />
+            type="com.bonoreminder.app.MainActivity" />
 
         <variable
             name="vm"
-            type="com.example.bonoremind.vm.MainViewModel" />
+            type="com.bonoreminder.app.vm.MainViewModel" />
     </data>
 
     <androidx.drawerlayout.widget.DrawerLayout

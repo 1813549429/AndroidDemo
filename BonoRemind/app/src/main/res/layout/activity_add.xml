@@ -7,11 +7,11 @@
 
         <variable
             name="holder"
-            type="com.example.bonoremind.AddActivity" />
+            type="com.bonoreminder.app.AddActivity" />
 
         <variable
             name="vm"
-            type="com.example.bonoremind.vm.AddViewModel" />
+            type="com.bonoreminder.app.vm.AddViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

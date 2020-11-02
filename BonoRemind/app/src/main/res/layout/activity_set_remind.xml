@@ -6,11 +6,11 @@
 
         <variable
             name="holder"
-            type="com.example.bonoremind.SetRemindActivity" />
+            type="com.bonoreminder.app.SetRemindActivity" />
 
         <variable
             name="vm"
-            type="com.example.bonoremind.vm.SetRemindViewModel" />
+            type="com.bonoreminder.app.vm.SetRemindViewModel" />
     </data>
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
