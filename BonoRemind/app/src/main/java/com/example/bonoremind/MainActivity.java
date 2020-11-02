@@ -317,7 +317,7 @@ public class MainActivity extends BaseActivity<MainViewModel, ActivityMainBindin
                         currentDays[2] = 20;
                         long repeatRemindTime = DateUtil.intArrayToLong(currentDays);
                         remindMinutes = repeatRemindTime;
-                        if (repeatRemindTime < recentlyMinutes) {
+                        if (repeatRemindTime <= recentlyMinutes) {
                             if (recentlyMinutes > System.currentTimeMillis()) {
                                 recentlyMinutes = repeatRemindTime;
                                 recentlyRemind = remind;
@@ -344,7 +344,7 @@ public class MainActivity extends BaseActivity<MainViewModel, ActivityMainBindin
                         //如果日期相等才可以继续
                         long repeatRemindTime = DateUtil.intArrayToLong(currentDays);
                         remindMinutes = repeatRemindTime;
-                        if (repeatRemindTime < recentlyMinutes) {
+                        if (repeatRemindTime <= recentlyMinutes) {
                             if (repeatRemindTime > System.currentTimeMillis()) {
                                 recentlyMinutes = repeatRemindTime;
                                 recentlyRemind = remind;
@@ -370,7 +370,7 @@ public class MainActivity extends BaseActivity<MainViewModel, ActivityMainBindin
                     }
                     long repeatRemindTime = DateUtil.intArrayToLong(currentDays);
                     remindMinutes = repeatRemindTime;
-                    if (repeatRemindTime < recentlyMinutes) {
+                    if (repeatRemindTime <= recentlyMinutes) {
                         if (repeatRemindTime > System.currentTimeMillis()) {
                             recentlyMinutes = repeatRemindTime;
                             recentlyRemind = remind;
@@ -429,7 +429,7 @@ public class MainActivity extends BaseActivity<MainViewModel, ActivityMainBindin
     }
 
     private boolean isNotScheduledData(Remind remind)  {
-        if(TextUtils.isEmpty(remind.getAdvance()) || remind.getAdvance().contains("-1")) {
+        if((TextUtils.isEmpty(remind.getAdvance()) || remind.getAdvance().contains("-1")) && !isCompletedData(remind)) {
             return true;
         }
         return false;
@@ -438,7 +438,7 @@ public class MainActivity extends BaseActivity<MainViewModel, ActivityMainBindin
     private boolean isNextDaysData(Remind remind)  {
         int currentDay = DateUtil.getYearMonthDay(System.currentTimeMillis());
         int remindDay = DateUtil.getYearMonthDay(remind.getTime());
-        if(remindDay - currentDay > 0 && remindDay-currentDay <= 7 && !isNotScheduledData(remind)) {
+        if(remindDay - currentDay > 0 && remindDay-currentDay <= 7 && !isNotScheduledData(remind) && !isCompletedData(remind)) {
             return true;
         }
         return false;
@@ -447,7 +447,7 @@ public class MainActivity extends BaseActivity<MainViewModel, ActivityMainBindin
     private boolean isTodayData(Remind remind)  {
         int currentDay = DateUtil.getYearMonthDay(System.currentTimeMillis());
         int remindDay = DateUtil.getYearMonthDay(remind.getTime());
-        if(currentDay == remindDay && !isNotScheduledData(remind)) {
+        if(currentDay == remindDay && !isNotScheduledData(remind) && !isCompletedData(remind)) {
             return true;
         }
         return false;
@@ -529,6 +529,7 @@ public class MainActivity extends BaseActivity<MainViewModel, ActivityMainBindin
                     Remind remind = secondNode.getRemindData();
                     if(isLongSelect) {
                         CheckedTextView checkedTextView = view.findViewById(R.id.cb_item_complete);
+                        checkedTextView.setBackground(getResources().getDrawable(R.drawable.item_second_checkbox));
                         checkedTextView.setChecked(!checkedTextView.isChecked());
                         if(checkedTextView.isChecked()) {
                             checkedRemindList.add(remind);
@@ -555,6 +556,7 @@ public class MainActivity extends BaseActivity<MainViewModel, ActivityMainBindin
                 if(view.findViewById(R.id.item_count) == null) {
                     long_select.setVisibility(View.VISIBLE);
                     CheckedTextView checkedTextView = view.findViewById(R.id.cb_item_complete);
+                    checkedTextView.setBackground(getDrawable(R.drawable.item_second_checkbox));
                     checkedTextView.setChecked(!checkedTextView.isChecked());
                     isLongSelect = true;
                     if(checkedTextView.isChecked()) {
@@ -749,22 +751,22 @@ public class MainActivity extends BaseActivity<MainViewModel, ActivityMainBindin
                 measureRemindTime(remind);
                 SecondNode secondNode = new SecondNode(remind, null);
                 firstNodeList.clear();
-                if (isOverdueData(remind)) {
+                if (isOverdueData(remind) && !isCompletedData(remind)) {
                     secondNodeListOverdue.add(secondNode);
                     firstNodeOverdue.setChildNode(secondNodeListOverdue);
                 }
                 firstNodeList.add(firstNodeOverdue);
-                if (isTodayData(remind)) {
+                if (isTodayData(remind) && !isCompletedData(remind)) {
                     secondNodeListToday.add(secondNode);
                     firstNodeToday.setChildNode(secondNodeListToday);
                 }
                 firstNodeList.add(firstNodeToday);
-                if (isNextDaysData(remind)) {
+                if (isNextDaysData(remind) && !isCompletedData(remind)) {
                     secondNodeListNextDays.add(secondNode);
                     firstNodeNextDays.setChildNode(secondNodeListNextDays);
                 }
                 firstNodeList.add(firstNodeNextDays);
-                if (isNotScheduledData(remind)) {
+                if (isNotScheduledData(remind) && !isCompletedData(remind)) {
                     secondNodeListNotScheduled.add(secondNode);
                     firstNodeNotScheduled.setChildNode(secondNodeListNotScheduled);
                 }
@@ -773,7 +775,9 @@ public class MainActivity extends BaseActivity<MainViewModel, ActivityMainBindin
                     secondNodeListCompleted.add(secondNode);
                     firstNodeCompleted.setChildNode(secondNodeListCompleted);
                 }
-                firstNodeList.add(firstNodeCompleted);
+                if (!isHide) {
+                    firstNodeList.add(firstNodeCompleted);
+                }
 
                 mAdapter.setList(firstNodeList);
             }
@@ -781,7 +785,14 @@ public class MainActivity extends BaseActivity<MainViewModel, ActivityMainBindin
             if (data != null) {
                 //更新数据
                 Remind remind = data.getParcelableExtra("remind");
-                
+                boolean isDelete = data.getBooleanExtra("isDelete", false);
+                if (isDelete) {
+                    //删除
+
+                } {
+                    //保存
+
+                }
 
             }
         }

@@ -95,8 +95,11 @@ public class SetTimeDialogActivity extends BaseActivity<SetTimeViewModel, Activi
         timeTextLiveData.observe(this, new Observer<String>() {
             @Override
             public void onChanged(String s) {
-                int[] hoursTime = DateUtil.strToTime(s);
-                if (!resultRemind.isSetting() && hoursTime[0] == 9 && hoursTime[1] == 0) {
+                int[] hoursTime = null;
+                if (!s.equals(getString(R.string.no_time))) {
+                    hoursTime = DateUtil.strToTime(s);
+                }
+                if (s.equals(getString(R.string.no_time)) || (!resultRemind.isSetting() && hoursTime[0] == 9 && hoursTime[1] == 0)) {
                     //上午九点可以认为是默认的
                     mIbClearTime.setVisibility(View.GONE);
                     mTvSetTime.setTextColor(Color.parseColor("#40000000"));
@@ -119,7 +122,7 @@ public class SetTimeDialogActivity extends BaseActivity<SetTimeViewModel, Activi
             @Override
             public void onChanged(String s) {
                 //如果没有数据
-                if (TextUtils.isEmpty(s)) {
+                if (TextUtils.isEmpty(s) || s.equals(getString(R.string.no_reminder))) {
                     //不管用？
                     mTvSetRemind.setText(getString(R.string.no_reminder));
                     //设置颜色
@@ -138,7 +141,7 @@ public class SetTimeDialogActivity extends BaseActivity<SetTimeViewModel, Activi
             @Override
             public void onChanged(String s) {
                 //如果没有数据
-                if (TextUtils.isEmpty(s) || s.equals(getString(R.string.none))) {
+                if (TextUtils.isEmpty(s) || s.equals(getString(R.string.no_repeat)) || s.equals(getString(R.string.none))) {
                     //不管用？
                     mTvSetRepeat.setText(getString(R.string.no_repeat));
                     //设置颜色
@@ -232,17 +235,17 @@ public class SetTimeDialogActivity extends BaseActivity<SetTimeViewModel, Activi
                 remindTime[3] = 9;
                 remindTime[4] = 0;
                 resultRemind.setSetting(false);
-                timeTextLiveData.setValue(DateUtil.timeToStr(DateUtil.currentToNine(System.currentTimeMillis())));
+                timeTextLiveData.setValue(getString(R.string.no_time));
                 break;
             case CLEAR_REMINDER:
                 advanceText = "";
                 resultRemind.setAdvance(advanceText);
-                remindTextLiveData.setValue(advanceText);
+                remindTextLiveData.setValue(getString(R.string.no_reminder));
                 break;
             case CLEAR_REPEAT:
                 repeatText = "";
                 resultRemind.setRepeatType(0);
-                repeatTextLiveData.setValue(repeatText);
+                repeatTextLiveData.setValue(getString(R.string.no_repeat));
                 break;
             case LAST_MONTH:
                 monthCalendar.toLastPager();

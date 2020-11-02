@@ -58,8 +58,10 @@ public class SecondProvider extends BaseNodeProvider {
         tv_item_date.setTextColor(Color.parseColor("#000000"));
         tv_item_title.getPaint().setFlags(Paint.CURSOR_AFTER);
         iv_hide.setVisibility(View.INVISIBLE);
-
+        iv_item_img.setVisibility(View.VISIBLE);
+        tv_item_date.setVisibility(View.VISIBLE);
         switch (entity.getMainItemType()) {
+
             case MainActivity
                     .OVERDUE:
                 iv_item_img.setBackgroundResource(R.mipmap.overdue);
@@ -108,7 +110,8 @@ public class SecondProvider extends BaseNodeProvider {
     @Override
     public void onClick(BaseViewHolder helper, View view, BaseNode data, int position) {
         SecondNode entity = (SecondNode) data;
-
+        Remind remind = entity.getRemindData();
+        remind.setComplete(true);
     }
 
     @Override

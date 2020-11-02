@@ -77,20 +77,13 @@ public class RemindAdapter extends RecyclerView.Adapter<RemindAdapter.ViewHolder
         public void onClick(View v) {
             if(v.getId() == R.id.ll_remind) {
                 String none = context.getString(R.string.none);
-                String oneTime = context.getString(R.string.one_time);
                 String checkedText = textView.getText().toString();
                 if (checkedText.equals(none)) {
-                    checkedList.clear();
-                    checkedList.add(checkedText);
-                }else if (checkedText.equals(oneTime)) {
                     checkedList.clear();
                     checkedList.add(checkedText);
                 }else {
                     if(checkedList.contains(none)) {
                         checkedList.remove(none);
-                    }
-                    if(checkedList.contains(oneTime)) {
-                        checkedList.remove(oneTime);
                     }
 
                     if(!checkBox.isChecked()) {

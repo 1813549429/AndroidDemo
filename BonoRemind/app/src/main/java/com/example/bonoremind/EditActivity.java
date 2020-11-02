@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.Paint;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
@@ -13,7 +14,6 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
-import com.example.bonoremind.R;
 import com.example.bonoremind.app.AppContext;
 import com.example.bonoremind.db.entity.Remind;
 import com.example.bonoremind.utils.DateUtil;
@@ -24,7 +24,7 @@ public class EditActivity extends AppCompatActivity implements View.OnClickListe
     private static final int SET_TIME = 0;
     private Remind resultRemind;
     private String[] remindStr;
-    private EditText mItemTitle;
+    private EditText mEtTitle;
     private TextView mTvSetTime;
     private TextView mTvSetRemind;
     private TextView mTvSetRepeat;
@@ -32,6 +32,7 @@ public class EditActivity extends AppCompatActivity implements View.OnClickListe
     private ImageButton ib_clear_remind;
     private ImageButton ib_clear_repeat;
     private EditText mEtRemark;
+    private CheckBox checkBox;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,10 +64,10 @@ public class EditActivity extends AppCompatActivity implements View.OnClickListe
         ib_clear_time = findViewById(R.id.ib_clear_time);
         ib_clear_remind = findViewById(R.id.ib_clear_remind);
         ib_clear_repeat = findViewById(R.id.ib_clear_repeat);
-        CheckBox checkBox = findViewById(R.id.checkbox);
+        checkBox = findViewById(R.id.checkbox);
         TextView tv_title = findViewById(R.id.tv_title);
         tv_title.setText(R.string.list_title);
-        mItemTitle = findViewById(R.id.et_item_title);
+        mEtTitle = findViewById(R.id.et_item_title);
         mTvSetTime = findViewById(R.id.tv_set_time);
         mTvSetRemind = findViewById(R.id.tv_set_remind);
         mTvSetRepeat = findViewById(R.id.tv_set_repeat);
@@ -89,7 +90,7 @@ public class EditActivity extends AppCompatActivity implements View.OnClickListe
 
     private void initComponent() {
         if (!TextUtils.isEmpty(remindStr[0])) {
-            mItemTitle.setText(remindStr[0]);
+            mEtTitle.setText(remindStr[0]);
         }
         if (!TextUtils.isEmpty(remindStr[1])) {
             mTvSetTime.setText(remindStr[1]);
@@ -112,9 +113,29 @@ public class EditActivity extends AppCompatActivity implements View.OnClickListe
             mEtRemark.setText(remindStr[4]);
             mEtRemark.setTextColor(Color.parseColor("#000000"));
         }
+
+        if (resultRemind.isComplete()) {
+            checkBox.setChecked(true);
+        }else {
+            checkBox.setChecked(false);
+        }
     }
 
     public void left(View view) {
+        resultRemind.setTitle(mEtTitle.getText().toString());
+        resultRemind.setRemark(mEtRemark.getText().toString());
+
+        AppContext.executors.diskIO().execute(new Runnable() {
+            @Override
+            public void run() {
+                AppContext.mainItemRepository.deleteReminds(resultRemind);
+                AppContext.mainItemRepository.insertRemind(resultRemind);
+            }
+        });
+        Intent intent = new Intent();
+        intent.putExtra("remind", resultRemind);
+        intent.putExtra("isDelete", false);
+        setResult(RESULT_OK, intent);
         finish();
     }
 
@@ -125,6 +146,10 @@ public class EditActivity extends AppCompatActivity implements View.OnClickListe
                 AppContext.mainItemRepository.deleteReminds(resultRemind);
             }
         });
+        Intent intent = new Intent();
+        intent.putExtra("remind", resultRemind);
+        intent.putExtra("isDelete", true);
+        setResult(RESULT_OK, intent);
         finish();
     }
 
@@ -163,7 +188,11 @@ public class EditActivity extends AppCompatActivity implements View.OnClickListe
                 ib_clear_repeat.setVisibility(View.GONE);
                 break;
             case R.id.checkbox:
-                resultRemind.setComplete(true);
+                if (checkBox.isChecked()) {
+                    resultRemind.setComplete(true);
+                } else {
+                    resultRemind.setComplete(false);
+                }
 
                 break;
         }
@@ -178,7 +207,6 @@ public class EditActivity extends AppCompatActivity implements View.OnClickListe
                 resultRemind = data.getParcelableExtra("remind");
                 remindStr = DateUtil.remindToStr(resultRemind);
                 initComponent();
-
 
             }
         }
